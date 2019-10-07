@@ -10,13 +10,6 @@ def tuple_mult(tup, val):
     return tuple(x*val for x in tup)
 
 
-black_cell_img = pygame.image.load("images/black_cell.png")
-white_cell_img = pygame.image.load("images/white_cell.png")
-
-# get the image width and height as a tuple
-cell_rect = white_cell_img.get_rect()
-
-
 class Cell:
     def __init__(self, col, row, cell_size, screen):
         self.pos = (col, row)
@@ -37,11 +30,13 @@ class Cell:
     def draw(self):
         # draw from the top-left corner of this cell
         if self.alive:
-            self.screen.blit(white_cell_img, tuple_mult(
-                self.pos, self.cell_size))
-        else:
-            self.screen.blit(black_cell_img, tuple_mult(
-                self.pos, self.cell_size))
+            pygame.draw.rect(
+                self.screen, (255, 255, 255),
+                (self.pos[0] * self.cell_size,  # x
+                 self.pos[1] * self.cell_size,  # y
+                 self.cell_size, self.cell_size),  # width, height
+                0  # thickness, 0 means fill it instead
+            )
 
     def count_neighbors(self, grid_cells, grid_size):
         top_edge = self.pos[1] == 0
