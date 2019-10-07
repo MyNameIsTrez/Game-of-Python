@@ -8,7 +8,7 @@ import time
 def setup():
     pygame.init()
 
-    cols = 10
+    cols = 20
     rows = 15
     cell_size = 64  # the width and height of the cells' img
 
