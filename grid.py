@@ -38,6 +38,6 @@ class Grid:
         for col in self.cells:
             for cell in col:
                 cell.draw()
-                text = str(cell.neighbors)
-                font.render_to(screen, tuple_mult(cell.pos, self.cell_size), text,
-                               (60, 205, 150))  # display text
+                # text = str(cell.neighbors)
+                # font.render_to(screen, tuple_mult(cell.pos, self.cell_size), text,
+                #                (60, 205, 150))  # display text
