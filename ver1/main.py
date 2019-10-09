@@ -1,15 +1,16 @@
 import pygame.freetype
-import sys
-from grid import Grid
 import pygame
+import sys
 import time
+
+from grid import Grid
 
 
 def setup():
     pygame.init()
 
-    cols = 20
-    rows = 15
+    cols = 10
+    rows = 8
     cell_size = 64  # the width and height of the cells' img
 
     size = (cols * cell_size, rows * cell_size)
@@ -17,7 +18,7 @@ def setup():
     font = pygame.freetype.SysFont("comicsansms", 17)
     grid = Grid(cols, rows, cell_size, screen)  # create the grid
 
-    return size, screen, font, grid
+    return screen, font, grid
 
 
 def main():
@@ -26,7 +27,7 @@ def main():
             if (event.type == pygame.QUIT):
                 sys.exit()
 
-        screen.fill((0, 0, 0))  # fill the screen black
+        screen.fill((0, 0, 0))  # make the screen black
 
         grid.calc_cells_neighbors()
         grid.draw_cells(screen, font)
@@ -36,5 +37,5 @@ def main():
         time.sleep(0.2)
 
 
-size, screen, font, grid = setup()
+screen, font, grid = setup()
 main()
