@@ -1,9 +1,6 @@
 import pygame
 
 
-# def tuple_mult(tup, val):
-# return tuple(x*val for x in tup)
-
 class Grid:
     def __init__(self, cols, rows, cell_size, font, screen):
         self.size = (cols, rows)
@@ -131,11 +128,6 @@ class Grid:
                         self.screen, pos, str(neighbors), (255, 50, 50))
 
     def update_cells_state(self, col, row):
-        # switcher = {
-        #     2: self.cells[col][row],
-        #     3: True,
-        # }
-        # self.cells[col][row] = switcher.get(neighbors, False)
         for col in range(len(self.update_list)):
             for row in range(len(self.update_list[col])):
                 neighbors = self.cell_neighbors[col][row]
@@ -143,19 +135,6 @@ class Grid:
                     self.cells[col][row] = True
                 elif (neighbors != 2):
                     self.cells[col][row] = False
-
-    def draw_cell_updates(self):
-        # we have to use range(len()) to get the index
-        for col in range(len(self.update_list)):
-            for row in range(len(self.update_list[col])):
-                if (self.update_list[col][row]):
-                    pygame.draw.rect(
-                        self.screen, (255, 255, 255),  # white
-                        (col * self.cell_size,  # x
-                         row * self.cell_size,  # y
-                         self.cell_size, self.cell_size),  # width, height
-                        0  # thickness, 0 means fill it instead
-                    )
 
     def draw_cells(self):
         # we have to use range(len()) to get the index
