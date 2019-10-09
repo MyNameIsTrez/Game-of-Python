@@ -9,8 +9,8 @@ from grid import Grid
 def setup():
     pygame.init()
 
-    cols = 10
-    rows = 8
+    cols = 30
+    rows = 16
     cell_size = 64  # the width and height of the cells' img
 
     size = (cols * cell_size, rows * cell_size)
@@ -18,13 +18,15 @@ def setup():
     font = pygame.freetype.SysFont("comicsansms", 17)
     grid = Grid(cols, rows, cell_size, font, screen)  # create the grid
     grid.create_cells(cell_size)
+    grid.create_cell_neighbors(cell_size)
+    update_interval = 0.1
 
-    return screen, grid
+    return screen, grid, update_interval
 
 
 def main():
-    screen, grid = setup()
-    
+    screen, grid, update_interval = setup()
+
     grid.create_update_list()
 
 #     grid.draw_cell_updates()
@@ -32,7 +34,7 @@ def main():
     grid.draw_neighbor_count()
 
     pygame.display.flip()
-    time.sleep(3)
+    time.sleep(update_interval)
 
     while (True):
         for event in pygame.event.get():
@@ -48,9 +50,8 @@ def main():
         grid.draw_cells()
         grid.draw_neighbor_count()
 
-
         pygame.display.flip()  # display this frame
-        time.sleep(3)
+        time.sleep(update_interval)
 
 
 main()
