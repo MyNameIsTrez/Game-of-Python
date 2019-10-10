@@ -61,34 +61,18 @@ def setup():
     grid.create_cells()
     grid.create_cells_neighbor_count()
 
-    items = {}
-    items["screen"] = screen
-    items["grid"] = grid
-    items["update_interval"] = update_interval
-    items["draw_debug_info"] = draw_debug_info
-    items["draw_neighbor_count"] = draw_neighbor_count
-    items["size"] = size
-    items["font_debug"] = font_debug
-    items["cols"] = cols
-    items["rows"] = rows
-    items["draw_cells"] = draw_cells
-    return items
+    return (screen, grid, update_interval, draw_debug_info,
+            draw_neighbor_count, size, font_debug, cols, rows, draw_cells)
 
 
 def main():
     """placeholder"""
     first_start_time = time.time()
-    items = setup()
-    screen = items["screen"]
-    grid = items["grid"]
-    update_interval = items["update_interval"]
-    draw_debug_info = items["draw_debug_info"]
-    draw_neighbor_count = items["draw_neighbor_count"]
-    size = items["size"]
-    font_debug = items["font_debug"]
-    cols = items["cols"]
-    rows = items["rows"]
-    draw_cells = items["draw_cells"]
+
+    (screen, grid, update_interval, draw_debug_info, draw_neighbor_count,
+     size, font_debug, cols, rows, draw_cells) = setup()
+
+    fill_screen(screen)
 
     if draw_cells:
         grid.draw_cells()
@@ -108,7 +92,7 @@ def main():
         running, draw_debug_info, draw_cells, draw_neighbor_count = get_inputs(
             screen, size, running, draw_debug_info, draw_cells, draw_neighbor_count)
 
-        screen.fill((50, 50, 50))  # make the screen gray
+        fill_screen(screen)
 
         grid.update_cells_neighbor_count()
         grid.update_cells_state()
@@ -122,6 +106,10 @@ def main():
         pygame.display.flip()  # draw this frame
 
         sleep(update_interval, start_time)
+
+def fill_screen(screen):
+    """placeholder"""
+    screen.fill((50, 50, 50))  # make the screen gray
 
 def get_inputs(screen, size, running, draw_debug_info, draw_cells, draw_neighbor_count):
     """placeholder"""
