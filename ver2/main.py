@@ -19,11 +19,12 @@ This is the order of the functions this program uses to calculate the cells' nex
         grid.set_starter_cells() # sets some of the cells to True, according to r_pentomino/glider
 
     # main while loop
-        # these two functions shouldn't be necessary, as I can just use neighbor_count instead!
+        # this next line is unnecessary, just only save the updated cells in an empty array
         grid.create_update_list() # remakes a 2D array called update_list, and fills it with Falses
         grid.set_update_list() # sets alive cells and their (dead) neighbors to True in update_list
 
         # this next function seems unnecessary in tests, but it makes sense to call it every frame
+        # this next line is also unnecessary, just only save the cells with neighbor counts in an empty array
         grid.create_neighbor_count() # (re)makes a 2D array with a neighbor count of 0 for each cell
         grid.set_neighbor_count() # uses update_list to update the neighbor count array
 
@@ -111,8 +112,8 @@ def main():
 
         fill_screen(screen)
 
-        # grid.create_update_list()
-        # grid.set_update_list()
+        grid.create_update_list()
+        grid.set_update_list()
 
         # this next function seems unnecessary in tests, but it makes sense to call it every frame
         grid.create_neighbor_count()
