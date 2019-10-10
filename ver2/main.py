@@ -59,6 +59,7 @@ def setup():
     grid = Grid(cols, rows, cell_size, font_neighbor,
                 screen)  # create the grid
     grid.create_cells()
+    grid.set_starter_cells()
     grid.create_cells_neighbor_count()
 
     return (screen, grid, update_interval, draw_debug_info_bool,

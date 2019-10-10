@@ -23,6 +23,7 @@ class Grid:
             [False for row in range(self.size[1])] for col in range(self.size[0])
         ]
 
+    def set_starter_cells(self):
         offset_x = math.floor(self.size[0] / 2)
         offset_y = math.floor(self.size[1] / 2)
 
