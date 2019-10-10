@@ -13,7 +13,7 @@ class Grid:
         self.font_neighbor = font_neighbor
         self.screen = screen
         self.cells = None
-        self.cells_neighbor_count = None
+        self.neighbor_count = None
         self.update_list = None
 
     def create_cells(self):
@@ -29,23 +29,23 @@ class Grid:
         offset_y = math.floor(self.size[1] / 2)
 
         # r_pentomino
-        # self.cells[0+offset_x][1+offset_y] = True
-        # self.cells[1+offset_x][0+offset_y] = True
-        # self.cells[1+offset_x][1+offset_y] = True
-        # self.cells[1+offset_x][2+offset_y] = True
-        # self.cells[2+offset_x][0+offset_y] = True
+        self.cells[0+offset_x][1+offset_y] = True
+        self.cells[1+offset_x][0+offset_y] = True
+        self.cells[1+offset_x][1+offset_y] = True
+        self.cells[1+offset_x][2+offset_y] = True
+        self.cells[2+offset_x][0+offset_y] = True
 
         # glider, useful for seeing if the states are being set correctly
-        self.cells[0+offset_x][1+offset_y] = True
-        self.cells[1+offset_x][2+offset_y] = True
-        self.cells[2+offset_x][2+offset_y] = True
-        self.cells[2+offset_x][1+offset_y] = True
-        self.cells[2+offset_x][0+offset_y] = True
+        # self.cells[0+offset_x][1+offset_y] = True
+        # self.cells[1+offset_x][2+offset_y] = True
+        # self.cells[2+offset_x][2+offset_y] = True
+        # self.cells[2+offset_x][1+offset_y] = True
+        # self.cells[2+offset_x][0+offset_y] = True
 
     def create_neighbor_count(self):
         """placeholder"""
         # (re)creates a 2D array with a False value for every cell, to hold their neighbor counts in
-        self.cells_neighbor_count = [
+        self.neighbor_count = [
             [0 for row in range(self.size[1])] for col in range(self.size[0])
         ]
 
@@ -64,9 +64,9 @@ class Grid:
                     # sets itself to True in update_list
                     self.update_list[col][row] = True
                     # add its neighbors to update_list
-                    self.set_cells_neighbor_to_update_list(col, row)
+                    self.set_neighbor_to_update_list(col, row)
 
-    def set_cells_neighbor_to_update_list(self, col, row):
+    def set_neighbor_to_update_list(self, col, row):
         """placeholder"""
         top_edge = row == 0
         bottom_edge = row == self.size[1] - 1
@@ -99,13 +99,13 @@ class Grid:
             self.update_list[col+1][row+1] = True
 
     def set_neighbor_count(self):
-        """placeholder"""
+        """uses update_list"""
         for col in range(len(self.update_list)):
             for row in range(len(self.update_list[col])):
                 if self.update_list[col][row]:
-                    # get the number of neighbors, as it decides what state this cell will have
+                    # gets and then sets the number of alive neighbors around this cell
                     neighbors = self.get_neighbor_count(col, row)
-                    self.cells_neighbor_count[col][row] = neighbors
+                    self.neighbor_count[col][row] = neighbors
 
     def get_neighbor_count(self, col, row):
         """placeholder"""
@@ -156,10 +156,10 @@ class Grid:
                         self.screen, pos, str(neighbors), (255, 50, 50))
 
     def set_cells_state(self):
-        """placeholder"""
+        """uses update_list"""
         for col in range(len(self.update_list)):
             for row in range(len(self.update_list[col])):
-                neighbors = self.cells_neighbor_count[col][row]
+                neighbors = self.neighbor_count[col][row]
                 if neighbors == 3:
                     self.cells[col][row] = True
                 elif neighbors != 2:
@@ -173,6 +173,20 @@ class Grid:
                 if self.cells[col][row]:
                     pygame.draw.rect(
                         self.screen, (255, 255, 255),  # white
+                        (col * self.cell_size,  # x
+                         row * self.cell_size,  # y
+                         self.cell_size, self.cell_size),  # width, height
+                        0  # thickness, 0 means fill instead
+                    )
+
+    def draw_updated_cells(self):
+        """placeholder"""
+        # we have to use range(len()) to get the index
+        for col in range(len(self.update_list)):
+            for row in range(len(self.update_list[col])):
+                if self.update_list[col][row]:
+                    pygame.draw.rect(
+                        self.screen, (255, 0, 0),  # red
                         (col * self.cell_size,  # x
                          row * self.cell_size,  # y
                          self.cell_size, self.cell_size),  # width, height

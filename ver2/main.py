@@ -13,7 +13,7 @@ by adding this in your settings.json file, inside of the curly brackets:
     "--extension-pkg-whitelist=pygame"  // The extension is "lxml" not "1xml"
   ]
 
-This is the order of the functions this program uses to calculate the cells in Game of Life:
+This is the order of the functions this program uses to calculate:
   # setup
   grid.create_cells()
   grid.set_starter_cells()
@@ -24,8 +24,8 @@ This is the order of the functions this program uses to calculate the cells in G
   grid.create_neighbor_count()
 
   # main while loop
-  grid.set_neighbor_count()
-  grid.set_cells_state()
+  grid.set_neighbor_count() # uses update_list to update the neighbor count array
+  grid.set_cells_state() # uses update_list to change the cell array
 
   grid.create_update_list()
   grid.set_update_list()
@@ -94,6 +94,8 @@ def main():
     if draw_cells_bool:
         grid.draw_cells()
 
+    # grid.draw_updated_cells()
+
     draw_debug(draw_debug_info_bool, draw_neighbor_count_bool, first_start_time,
                update_interval, size, cols, rows, grid, font_debug, draw_cells_bool, screen)
 
@@ -115,6 +117,8 @@ def main():
 
         if draw_cells_bool:
             grid.draw_cells()
+
+        # grid.draw_updated_cells()
 
         grid.create_update_list()
         grid.set_update_list()

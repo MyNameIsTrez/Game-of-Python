@@ -29,7 +29,7 @@ def main():
 
         screen.fill((0, 0, 0))  # make the screen black
 
-        grid.calc_cells_neighbors()
+        grid.calc_neighbors()
         grid.draw_cells(screen, font)
         grid.update_cells()
 
