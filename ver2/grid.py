@@ -21,7 +21,7 @@ class Grid:
             [False for row in range(self.size[1])] for col in range(self.size[0])
         ]
 
-        offset = 50
+        offset = 250
 
         # r_pentomino
         self.cells[0+offset][1+offset] = True
@@ -170,5 +170,5 @@ class Grid:
                         (col * self.cell_size,  # x
                          row * self.cell_size,  # y
                          self.cell_size, self.cell_size),  # width, height
-                        0  # thickness, 0 means fill it instead
+                        0  # thickness, 0 means fill instead
                     )
