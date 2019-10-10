@@ -13,7 +13,7 @@ class Grid:
         self.font_neighbor = font_neighbor
         self.screen = screen
         self.cells = None
-        self.cell_neighbors = None
+        self.cells_neighbor_count = None
         self.update_list = None
 
     def create_cells(self):
@@ -26,27 +26,27 @@ class Grid:
         offset = math.floor(self.size[0] / 2)
 
         # r_pentomino
-        self.cells[0+offset][1+offset] = True
-        self.cells[1+offset][0+offset] = True
-        self.cells[1+offset][1+offset] = True
-        self.cells[1+offset][2+offset] = True
-        self.cells[2+offset][0+offset] = True
-
-        # glider
         # self.cells[0+offset][1+offset] = True
+        # self.cells[1+offset][0+offset] = True
+        # self.cells[1+offset][1+offset] = True
         # self.cells[1+offset][2+offset] = True
-        # self.cells[2+offset][2+offset] = True
-        # self.cells[2+offset][1+offset] = True
         # self.cells[2+offset][0+offset] = True
 
-    def create_cell_neighbors(self):
+        # glider, useful for seeing if the states are being set correctly
+        self.cells[0+offset][1+offset] = True
+        self.cells[1+offset][2+offset] = True
+        self.cells[2+offset][2+offset] = True
+        self.cells[2+offset][1+offset] = True
+        self.cells[2+offset][0+offset] = True
+
+    def create_cells_neighbor_count(self):
         """placeholder"""
         # create a 2D-array filled with Falses, to hold the cells in an x, y format
-        self.cell_neighbors = [
+        self.cells_neighbor_count = [
             [0 for row in range(self.size[1])] for col in range(self.size[0])
         ]
 
-    def create_update_list(self):
+    def create_cells_update_list(self):
         """placeholder"""
         # create a 2D-array filled with Falses, to hold the cells in an x, y format
         self.update_list = [
@@ -93,14 +93,14 @@ class Grid:
         if (not bottom_edge and not right_edge):
             self.update_list[col+1][row+1] = True
 
-    def update_from_update_list(self):
+    def update_cells_neighbor_count(self):
         """placeholder"""
         for col in range(len(self.update_list)):
             for row in range(len(self.update_list[col])):
                 if self.update_list[col][row]:
+                    # get the number of neighbors, as it decides what state this cell will have
                     neighbors = self.get_neighbor_count(col, row)
-                    self.cell_neighbors[col][row] = neighbors
-        self.update_cells_state(col, row)
+                    self.cells_neighbor_count[col][row] = neighbors
 
     def get_neighbor_count(self, col, row):
         """placeholder"""
@@ -150,11 +150,11 @@ class Grid:
                     self.font_neighbor.render_to(
                         self.screen, pos, str(neighbors), (255, 50, 50))
 
-    def update_cells_state(self, col, row):
+    def update_cells_state(self):
         """placeholder"""
         for col in range(len(self.update_list)):
             for row in range(len(self.update_list[col])):
-                neighbors = self.cell_neighbors[col][row]
+                neighbors = self.cells_neighbor_count[col][row]
                 if neighbors == 3:
                     self.cells[col][row] = True
                 elif neighbors != 2:

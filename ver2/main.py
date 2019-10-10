@@ -59,7 +59,7 @@ def setup():
     grid = Grid(cols, rows, cell_size, font_neighbor,
                 screen)  # create the grid
     grid.create_cells()
-    grid.create_cell_neighbors()
+    grid.create_cells_neighbor_count()
 
     items = {}
     items["screen"] = screen
@@ -99,7 +99,7 @@ def main():
     pygame.display.flip()
     time.sleep(update_interval)
 
-    grid.create_update_list()  # necessary for the while loop
+    grid.create_cells_update_list()  # necessary for the while loop
 
     running = True
     while running:
@@ -110,10 +110,11 @@ def main():
 
         screen.fill((50, 50, 50))  # make the screen gray
 
-        grid.update_from_update_list()
+        grid.update_cells_neighbor_count()
+        grid.update_cells_state()
         if draw_cells:
             grid.draw_cells()
-        grid.create_update_list()
+        grid.create_cells_update_list()
 
         draw_debug(draw_debug_info, draw_neighbor_count, start_time, update_interval,
                    size, cols, rows, grid, font_debug, draw_cells, screen)
