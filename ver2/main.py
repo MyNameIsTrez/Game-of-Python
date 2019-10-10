@@ -2,34 +2,36 @@
 Game of Python - Game of Life implementation written in Python by MyNameIsTrez.
 
 Controls:
-  escape - exits the program
-  f - fullscreen_bool
-  d - draw the debug info
-  n - draw the neighbor counts
+    escape - exits the program
+    f - fullscreen_bool
+    d - draw the debug info
+    n - draw the neighbor counts
 
 You can temporarily get rid of most of the false alerts in your IDE
 by adding this in your settings.json file, inside of the curly brackets:
-  "python.linting.pylintArgs": [
-    "--extension-pkg-whitelist=pygame"  // The extension is "lxml" not "1xml"
-  ]
+    "python.linting.pylintArgs": [
+        "--extension-pkg-whitelist=pygame"  // The extension is "lxml" not "1xml"
+    ]
 
 This is the order of the functions this program uses to calculate the cells' next state:
-  # setup
-    grid.create_cells()
-    grid.set_starter_cells()
+    # setup
+        grid.create_cells() # makes a 2D array called cells, and fills it with Falses
+        grid.set_starter_cells() # sets some of the cells to True, according to r_pentomino/glider
 
-    grid.create_update_list()
-    grid.set_update_list()
-  
-  # main while loop
-    grid.create_neighbor_count()
-    grid.set_neighbor_count() # uses update_list to update the neighbor count array
-    grid.set_cells_state() # uses update_list to change the cell array
+        grid.create_update_list() # makes a 2D array called update_list, and fills it with Falses
+        grid.set_update_list() # sets alive cells and their (dead) neighbors to True in update_list
 
-    # drawing stuff goes here
+    # main while loop
+        # this next function seems unnecessary in tests, but it makes sense to call it every frame
+        grid.create_neighbor_count() # (re)makes a 2D array with a neighbor count of 0 for each cell
+        grid.set_neighbor_count() # uses update_list to update the neighbor count array
 
-    grid.create_update_list()
-    grid.set_update_list()
+        grid.set_cells_state() # uses update_list to change the cell array
+
+        # drawing stuff goes here
+
+        grid.create_update_list() # remakes a 2D array called update_list, and fills it with Falses
+        grid.set_update_list() # sets alive cells and their (dead) neighbors to True in update_list
 """
 
 import sys
@@ -52,6 +54,7 @@ def setup():
     font_type = "arial"
     debug_font_size = 30
     draw_cells_bool = True
+    starter_cells_blueprint = 1  # 1 = r_pentomino, 2 = glider
 
     cols = 50
     rows = 50
@@ -71,13 +74,13 @@ def setup():
     font_debug = pygame.freetype.SysFont(font_type, debug_font_size)
     font_neighbor = pygame.freetype.SysFont(font_type, neighbor_font_size)
     grid = Grid(cols, rows, cell_size, font_neighbor,
-                screen)  # create the grid
+                starter_cells_blueprint, screen)  # create the grid
 
     grid.create_cells()
     grid.set_starter_cells()
+
     grid.create_update_list()
     grid.set_update_list()
-    grid.create_neighbor_count()
 
     return (screen, grid, update_interval, draw_debug_info_bool,
             draw_neighbor_count_bool, size, font_debug, cols, rows, draw_cells_bool)
@@ -113,7 +116,10 @@ def main():
 
         fill_screen(screen)
 
+        # this next function seems unnecessary in tests, but it makes sense to call it every frame
+        grid.create_neighbor_count()
         grid.set_neighbor_count()
+
         grid.set_cells_state()
 
         if draw_cells_bool:

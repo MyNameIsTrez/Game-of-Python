@@ -7,7 +7,7 @@ import pygame
 class Grid:
     """placeholder"""
 
-    def __init__(self, cols, rows, cell_size, font_neighbor, screen):
+    def __init__(self, cols, rows, cell_size, font_neighbor, starter_cells_blueprint, screen):
         self.size = (cols, rows)
         self.cell_size = cell_size
         self.font_neighbor = font_neighbor
@@ -15,49 +15,51 @@ class Grid:
         self.cells = None
         self.neighbor_count = None
         self.update_list = None
+        self.starter_cells_blueprint = starter_cells_blueprint
 
     def create_cells(self):
-        """placeholder"""
+        """makes a 2D array called cells, and fills it with Falses"""
         # create a 2D array filled with Falses, to hold the states of the cells in
         self.cells = [
             [False for row in range(self.size[1])] for col in range(self.size[0])
         ]
 
     def set_starter_cells(self):
-        """placeholder"""
+        """sets some of the cells to True, according to r_pentomino/glider"""
         offset_x = math.floor(self.size[0] / 2)
         offset_y = math.floor(self.size[1] / 2)
 
-        # r_pentomino
-        self.cells[0+offset_x][1+offset_y] = True
-        self.cells[1+offset_x][0+offset_y] = True
-        self.cells[1+offset_x][1+offset_y] = True
-        self.cells[1+offset_x][2+offset_y] = True
-        self.cells[2+offset_x][0+offset_y] = True
-
-        # glider, useful for seeing if the states are being set correctly
-        # self.cells[0+offset_x][1+offset_y] = True
-        # self.cells[1+offset_x][2+offset_y] = True
-        # self.cells[2+offset_x][2+offset_y] = True
-        # self.cells[2+offset_x][1+offset_y] = True
-        # self.cells[2+offset_x][0+offset_y] = True
+        if self.starter_cells_blueprint == 1:
+            # r_pentomino
+            self.cells[0+offset_x][1+offset_y] = True
+            self.cells[1+offset_x][0+offset_y] = True
+            self.cells[1+offset_x][1+offset_y] = True
+            self.cells[1+offset_x][2+offset_y] = True
+            self.cells[2+offset_x][0+offset_y] = True
+        else:
+            # glider, useful for seeing if the cell states are being set incorrectly
+            self.cells[0+offset_x][1+offset_y] = True
+            self.cells[1+offset_x][2+offset_y] = True
+            self.cells[2+offset_x][2+offset_y] = True
+            self.cells[2+offset_x][1+offset_y] = True
+            self.cells[2+offset_x][0+offset_y] = True
 
     def create_neighbor_count(self):
-        """placeholder"""
-        # (re)creates a 2D array with a False value for every cell, to hold their neighbor counts in
+        """(re)makes a 2D array with a neighbor count of 0 for each cell"""
+        # (re)makes a 2D array with a neighbor count of 0 for each cell
         self.neighbor_count = [
             [0 for row in range(self.size[1])] for col in range(self.size[0])
         ]
 
     def create_update_list(self):
-        """placeholder"""
+        """(re)makes a 2D array called update_list, and fills it with Falses"""
         # create a 2D array filled with Falses, to hold the cells in
         self.update_list = [
             [False for row in range(self.size[1])] for col in range(self.size[0])
         ]
 
     def set_update_list(self):
-        """placeholder"""
+        """sets alive cells and their (dead) neighbors to True in update_list"""
         for col in range(len(self.cells)):
             for row in range(len(self.cells[col])):
                 if self.cells[col][row]:
@@ -99,7 +101,7 @@ class Grid:
             self.update_list[col+1][row+1] = True
 
     def set_neighbor_count(self):
-        """uses update_list"""
+        """uses update_list to update the neighbor count array"""
         for col in range(len(self.update_list)):
             for row in range(len(self.update_list[col])):
                 if self.update_list[col][row]:
@@ -156,7 +158,7 @@ class Grid:
                         self.screen, pos, str(neighbors), (255, 50, 50))
 
     def set_cells_state(self):
-        """uses update_list"""
+        """uses update_list to change the cell array"""
         for col in range(len(self.update_list)):
             for row in range(len(self.update_list[col])):
                 neighbors = self.neighbor_count[col][row]
