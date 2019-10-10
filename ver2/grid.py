@@ -56,7 +56,7 @@ class Grid:
         for col in range(len(self.cells)):
             for row in range(len(self.cells[col])):
                 if self.cells[col][row]:
-                    # set itself to True in update_list
+                    # sets itself to True in update_list
                     self.update_list[col][row] = True
                     # add its neighbors to update_list
                     self.add_neighbor_to_update_list(col, row)
@@ -93,14 +93,13 @@ class Grid:
         if (not bottom_edge and not right_edge):
             self.update_list[col+1][row+1] = True
 
-    def update_from_update_list(self, ):
+    def update_from_update_list(self):
         """placeholder"""
         for col in range(len(self.update_list)):
             for row in range(len(self.update_list[col])):
                 if self.update_list[col][row]:
                     neighbors = self.get_neighbor_count(col, row)
                     self.cell_neighbors[col][row] = neighbors
-
         self.update_cells_state(col, row)
 
     def get_neighbor_count(self, col, row):
