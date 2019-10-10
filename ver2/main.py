@@ -107,9 +107,11 @@ def main():
 
         sleep(update_interval, start_time)
 
+
 def fill_screen(screen):
     """placeholder"""
     screen.fill((50, 50, 50))  # make the screen gray
+
 
 def get_inputs(screen, size, running_bool, draw_debug_info_bool, draw_cells_bool, draw_neighbor_count_bool):
     """placeholder"""
@@ -118,10 +120,10 @@ def get_inputs(screen, size, running_bool, draw_debug_info_bool, draw_cells_bool
             sys.exit()
 
         if event.type == pygame.KEYDOWN:
-            keys = pygame.key.get_pressed() # to register multiple keys held down
+            keys = pygame.key.get_pressed()  # to register multiple keys held down
             # exit the program
             if event.key == pygame.K_ESCAPE:
-                running_bool = False # sets running_bool to False to exit the while loop
+                running_bool = False  # sets running_bool to False to exit the while loop
             # toggle fullscreen_bool
             if event.key == pygame.K_f:
                 if screen.get_flags() & pygame.FULLSCREEN:
@@ -160,12 +162,13 @@ def draw_debug(draw_debug_info_bool, draw_neighbor_count_bool, start_time, updat
         text.append(string)
 
         # potential_speed_multiplier
-        potential_speed_multiplier = round(update_interval / partial_time_elapsed, 1)
+        potential_speed_multiplier = round(
+            update_interval / partial_time_elapsed, 1)
         if update_interval != 0:
             text.append("the program can run at " +
                         str(potential_speed_multiplier) + "x the current speed")
         else:
-            text.append("the program is running_bool as fast as it can!")
+            text.append("the program is running as fast as it can!")
 
         # grid size
         text.append("grid size: " + str(cols) + "x" + str(rows))
