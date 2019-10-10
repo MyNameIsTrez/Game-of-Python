@@ -18,7 +18,7 @@ class Grid:
 
     def create_cells(self):
         """placeholder"""
-        # create a 2D array filled with Falses, to hold the states of the cells in an x, y format
+        # create a 2D array filled with Falses, to hold the states of the cells in
         self.cells = [
             [False for row in range(self.size[1])] for col in range(self.size[0])
         ]
@@ -29,42 +29,44 @@ class Grid:
         offset_y = math.floor(self.size[1] / 2)
 
         # r_pentomino
-        self.cells[0+offset_x][1+offset_y] = True
-        self.cells[1+offset_x][0+offset_y] = True
-        self.cells[1+offset_x][1+offset_y] = True
-        self.cells[1+offset_x][2+offset_y] = True
-        self.cells[2+offset_x][0+offset_y] = True
+        # self.cells[0+offset_x][1+offset_y] = True
+        # self.cells[1+offset_x][0+offset_y] = True
+        # self.cells[1+offset_x][1+offset_y] = True
+        # self.cells[1+offset_x][2+offset_y] = True
+        # self.cells[2+offset_x][0+offset_y] = True
 
         # glider, useful for seeing if the states are being set correctly
-        # self.cells[0+offset][1+offset] = True
-        # self.cells[1+offset][2+offset] = True
-        # self.cells[2+offset][2+offset] = True
-        # self.cells[2+offset][1+offset] = True
-        # self.cells[2+offset][0+offset] = True
+        self.cells[0+offset_x][1+offset_y] = True
+        self.cells[1+offset_x][2+offset_y] = True
+        self.cells[2+offset_x][2+offset_y] = True
+        self.cells[2+offset_x][1+offset_y] = True
+        self.cells[2+offset_x][0+offset_y] = True
 
     def create_cells_neighbor_count(self):
         """placeholder"""
-        # create a 2D array filled with Falses, to hold the cells in an x, y format
+        # (re)creates a 2D array with a False value for every cell, to hold their neighbor counts in
         self.cells_neighbor_count = [
             [0 for row in range(self.size[1])] for col in range(self.size[0])
         ]
 
     def create_cells_update_list(self):
         """placeholder"""
-        # create a 2D array filled with Falses, to hold the cells in an x, y format
+        # create a 2D array filled with Falses, to hold the cells in
         self.update_list = [
             [False for row in range(self.size[1])] for col in range(self.size[0])
         ]
 
+    def set_cells_update_list(self):
+        """placeholder"""
         for col in range(len(self.cells)):
             for row in range(len(self.cells[col])):
                 if self.cells[col][row]:
                     # sets itself to True in update_list
                     self.update_list[col][row] = True
                     # add its neighbors to update_list
-                    self.add_neighbor_to_update_list(col, row)
+                    self.set_cells_neighbor_to_update_list(col, row)
 
-    def add_neighbor_to_update_list(self, col, row):
+    def set_cells_neighbor_to_update_list(self, col, row):
         """placeholder"""
         top_edge = row == 0
         bottom_edge = row == self.size[1] - 1

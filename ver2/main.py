@@ -1,21 +1,31 @@
 """
 Game of Python - Game of Life implementation written in Python by MyNameIsTrez.
 
-
 Controls:
-
 escape - exits the program
-f - fullscreen_bool
-d - draw the debug info
-n - draw the neighbor counts
-
+  f - fullscreen_bool
+  d - draw the debug info
+  n - draw the neighbor counts
 
 You can temporarily get rid of most of the false alerts in your IDE
 by adding this in your settings.json file, inside of the curly brackets:
+  "python.linting.pylintArgs": [
+    "--extension-pkg-whitelist=pygame"  // The extension is "lxml" not "1xml"
+  ]
 
-"python.linting.pylintArgs": [
-  "--extension-pkg-whitelist=pygame"  // The extension is "lxml" not "1xml"
-]
+This is the order of functions in which this program calculates Game of Life:
+  # setup
+  grid.create_cells()
+  grid.set_starter_cells()
+  grid.create_cells_update_list()
+  grid.set_cells_update_list()
+  grid.create_cells_neighbor_count()
+
+  # main while loop
+  grid.update_cells_neighbor_count()
+  grid.update_cells_state()
+  grid.create_cells_update_list()
+  grid.set_cells_update_list()
 """
 
 import sys
@@ -39,9 +49,9 @@ def setup():
     debug_font_size = 30
     draw_cells_bool = True
 
-    cols = 500
-    rows = 500
-    cell_size = 2
+    cols = 50
+    rows = 50
+    cell_size = 20
 
     # INITIALIZATION
     pygame.init()
@@ -58,8 +68,11 @@ def setup():
     font_neighbor = pygame.freetype.SysFont(font_type, neighbor_font_size)
     grid = Grid(cols, rows, cell_size, font_neighbor,
                 screen)  # create the grid
+
     grid.create_cells()
     grid.set_starter_cells()
+    grid.create_cells_update_list()
+    grid.set_cells_update_list()
     grid.create_cells_neighbor_count()
 
     return (screen, grid, update_interval, draw_debug_info_bool,
@@ -77,8 +90,6 @@ def main():
 
     if draw_cells_bool:
         grid.draw_cells()
-
-    grid.create_cells_update_list()
 
     draw_debug(draw_debug_info_bool, draw_neighbor_count_bool, first_start_time,
                update_interval, size, cols, rows, grid, font_debug, draw_cells_bool, screen)
@@ -98,9 +109,12 @@ def main():
 
         grid.update_cells_neighbor_count()
         grid.update_cells_state()
+
         if draw_cells_bool:
             grid.draw_cells()
+
         grid.create_cells_update_list()
+        grid.set_cells_update_list()
 
         draw_debug(draw_debug_info_bool, draw_neighbor_count_bool, start_time, update_interval,
                    size, cols, rows, grid, font_debug, draw_cells_bool, screen)

@@ -9,11 +9,11 @@ class Grid:
     def __init__(self, cols, rows, cell_size, screen):
         self.size = (cols, rows)
         self.cell_size = cell_size
-        
+
         self.create_cells(cell_size, screen)
 
     def create_cells(self, cell_size, screen):
-        # create a 2D-array to hold the cells in an x, y format
+        # create a 2D-array to hold the cells in
         self.cells = [
             [Cell(col, row, cell_size, screen) for row in range(self.size[1])] for col in range(self.size[0])
         ]
