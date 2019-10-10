@@ -23,14 +23,15 @@ class Grid:
             [False for row in range(self.size[1])] for col in range(self.size[0])
         ]
 
-        offset = math.floor(self.size[0] / 2)
+        offset_x = math.floor(self.size[0] / 2)
+        offset_y = math.floor(self.size[1] / 2)
 
         # r_pentomino
-        self.cells[0+offset][1+offset] = True
-        self.cells[1+offset][0+offset] = True
-        self.cells[1+offset][1+offset] = True
-        self.cells[1+offset][2+offset] = True
-        self.cells[2+offset][0+offset] = True
+        self.cells[0+offset_x][1+offset_y] = True
+        self.cells[1+offset_x][0+offset_y] = True
+        self.cells[1+offset_x][1+offset_y] = True
+        self.cells[1+offset_x][2+offset_y] = True
+        self.cells[2+offset_x][0+offset_y] = True
 
         # glider, useful for seeing if the states are being set correctly
         # self.cells[0+offset][1+offset] = True
