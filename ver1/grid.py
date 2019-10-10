@@ -18,7 +18,7 @@ class Grid:
             [Cell(col, row, cell_size, screen) for row in range(self.size[1])] for col in range(self.size[0])
         ]
 
-    def calc_neighbors(self):
+    def calc_cells_neighbors(self):
         for col in self.cells:
             for cell in col:
                 cell.count_neighbors(self.cells, self.size)

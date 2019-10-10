@@ -144,7 +144,8 @@ def get_inputs(screen, size, running_bool, draw_debug_info_bool,
             sys.exit()
 
         if event.type == pygame.KEYDOWN:
-            keys = pygame.key.get_pressed()  # to register multiple keys held down
+            # needed to register multiple keys being held down at once
+            keys = pygame.key.get_pressed()
             # exit the program
             if event.key == pygame.K_ESCAPE:
                 running_bool = False  # sets running_bool to False to exit the while loop
