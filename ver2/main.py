@@ -2,7 +2,7 @@
 Game of Python - Game of Life implementation written in Python by MyNameIsTrez.
 
 Controls:
-escape - exits the program
+  escape - exits the program
   f - fullscreen_bool
   d - draw the debug info
   n - draw the neighbor counts
@@ -13,19 +13,22 @@ by adding this in your settings.json file, inside of the curly brackets:
     "--extension-pkg-whitelist=pygame"  // The extension is "lxml" not "1xml"
   ]
 
-This is the order of functions in which this program calculates Game of Life:
+This is the order of the functions this program uses to calculate the cells in Game of Life:
   # setup
   grid.create_cells()
   grid.set_starter_cells()
-  grid.create_cells_update_list()
-  grid.set_cells_update_list()
-  grid.create_cells_neighbor_count()
+
+  grid.create_update_list()
+  grid.set_update_list()
+
+  grid.create_neighbor_count()
 
   # main while loop
-  grid.update_cells_neighbor_count()
-  grid.update_cells_state()
-  grid.create_cells_update_list()
-  grid.set_cells_update_list()
+  grid.set_neighbor_count()
+  grid.set_cells_state()
+
+  grid.create_update_list()
+  grid.set_update_list()
 """
 
 import sys
@@ -71,9 +74,9 @@ def setup():
 
     grid.create_cells()
     grid.set_starter_cells()
-    grid.create_cells_update_list()
-    grid.set_cells_update_list()
-    grid.create_cells_neighbor_count()
+    grid.create_update_list()
+    grid.set_update_list()
+    grid.create_neighbor_count()
 
     return (screen, grid, update_interval, draw_debug_info_bool,
             draw_neighbor_count_bool, size, font_debug, cols, rows, draw_cells_bool)
@@ -107,14 +110,14 @@ def main():
 
         fill_screen(screen)
 
-        grid.update_cells_neighbor_count()
-        grid.update_cells_state()
+        grid.set_neighbor_count()
+        grid.set_cells_state()
 
         if draw_cells_bool:
             grid.draw_cells()
 
-        grid.create_cells_update_list()
-        grid.set_cells_update_list()
+        grid.create_update_list()
+        grid.set_update_list()
 
         draw_debug(draw_debug_info_bool, draw_neighbor_count_bool, start_time, update_interval,
                    size, cols, rows, grid, font_debug, draw_cells_bool, screen)

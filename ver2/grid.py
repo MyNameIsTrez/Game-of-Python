@@ -42,21 +42,21 @@ class Grid:
         self.cells[2+offset_x][1+offset_y] = True
         self.cells[2+offset_x][0+offset_y] = True
 
-    def create_cells_neighbor_count(self):
+    def create_neighbor_count(self):
         """placeholder"""
         # (re)creates a 2D array with a False value for every cell, to hold their neighbor counts in
         self.cells_neighbor_count = [
             [0 for row in range(self.size[1])] for col in range(self.size[0])
         ]
 
-    def create_cells_update_list(self):
+    def create_update_list(self):
         """placeholder"""
         # create a 2D array filled with Falses, to hold the cells in
         self.update_list = [
             [False for row in range(self.size[1])] for col in range(self.size[0])
         ]
 
-    def set_cells_update_list(self):
+    def set_update_list(self):
         """placeholder"""
         for col in range(len(self.cells)):
             for row in range(len(self.cells[col])):
@@ -98,7 +98,7 @@ class Grid:
         if (not bottom_edge and not right_edge):
             self.update_list[col+1][row+1] = True
 
-    def update_cells_neighbor_count(self):
+    def set_neighbor_count(self):
         """placeholder"""
         for col in range(len(self.update_list)):
             for row in range(len(self.update_list[col])):
@@ -155,7 +155,7 @@ class Grid:
                     self.font_neighbor.render_to(
                         self.screen, pos, str(neighbors), (255, 50, 50))
 
-    def update_cells_state(self):
+    def set_cells_state(self):
         """placeholder"""
         for col in range(len(self.update_list)):
             for row in range(len(self.update_list[col])):
