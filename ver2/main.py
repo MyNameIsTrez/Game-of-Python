@@ -15,20 +15,21 @@ by adding this in your settings.json file, inside of the curly brackets:
 
 This is the order of the functions this program uses to calculate the cells' next state:
   # setup
-  grid.create_cells()
-  grid.set_starter_cells()
+    grid.create_cells()
+    grid.set_starter_cells()
 
-  grid.create_update_list()
-  grid.set_update_list()
-
-  grid.create_neighbor_count()
-
+    grid.create_update_list()
+    grid.set_update_list()
+  
   # main while loop
-  grid.set_neighbor_count() # uses update_list to update the neighbor count array
-  grid.set_cells_state() # uses update_list to change the cell array
+    grid.create_neighbor_count()
+    grid.set_neighbor_count() # uses update_list to update the neighbor count array
+    grid.set_cells_state() # uses update_list to change the cell array
 
-  grid.create_update_list()
-  grid.set_update_list()
+    # drawing stuff goes here
+
+    grid.create_update_list()
+    grid.set_update_list()
 """
 
 import sys
@@ -45,7 +46,7 @@ def setup():
     """placeholder"""
     # CUSTOM VALUES
     fullscreen_bool = False
-    update_interval = 0.1
+    update_interval = 0
     draw_debug_info_bool = True
     draw_neighbor_count_bool = False
     font_type = "arial"
