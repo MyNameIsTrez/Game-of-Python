@@ -78,20 +78,21 @@ def main():
     if draw_cells_bool:
         grid.draw_cells()
 
+    grid.create_cells_update_list()
+
     draw_debug(draw_debug_info_bool, draw_neighbor_count_bool, first_start_time,
                update_interval, size, cols, rows, grid, font_debug, draw_cells_bool, screen)
 
     pygame.display.flip()
     time.sleep(update_interval)
 
-    grid.create_cells_update_list()  # necessary for the while loop
-
     running_bool = True
     while running_bool:
         start_time = time.time()
 
         running_bool, draw_debug_info_bool, draw_cells_bool, draw_neighbor_count_bool = get_inputs(
-            screen, size, running_bool, draw_debug_info_bool, draw_cells_bool, draw_neighbor_count_bool)
+            screen, size, running_bool, draw_debug_info_bool,
+            draw_cells_bool, draw_neighbor_count_bool)
 
         fill_screen(screen)
 
@@ -114,7 +115,8 @@ def fill_screen(screen):
     screen.fill((50, 50, 50))  # make the screen gray
 
 
-def get_inputs(screen, size, running_bool, draw_debug_info_bool, draw_cells_bool, draw_neighbor_count_bool):
+def get_inputs(screen, size, running_bool, draw_debug_info_bool,
+               draw_cells_bool, draw_neighbor_count_bool):
     """placeholder"""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:

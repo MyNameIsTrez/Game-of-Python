@@ -24,6 +24,7 @@ class Grid:
         ]
 
     def set_starter_cells(self):
+        """placeholder"""
         offset_x = math.floor(self.size[0] / 2)
         offset_y = math.floor(self.size[1] / 2)
 
