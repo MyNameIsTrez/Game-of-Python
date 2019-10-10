@@ -37,6 +37,7 @@ def setup():
     draw_neighbor_count = False
     font_type = "arial"
     debug_font_size = 30
+    draw_cells = True
 
     cols = 500
     rows = 500
@@ -70,6 +71,7 @@ def setup():
     items["font_debug"] = font_debug
     items["cols"] = cols
     items["rows"] = rows
+    items["draw_cells"] = draw_cells
     return items
 
 
@@ -86,11 +88,13 @@ def main():
     font_debug = items["font_debug"]
     cols = items["cols"]
     rows = items["rows"]
+    draw_cells = items["draw_cells"]
 
-    grid.draw_cells()
+    if draw_cells:
+        grid.draw_cells()
 
     draw_debug(draw_debug_info, draw_neighbor_count, first_start_time,
-               update_interval, size, cols, rows, grid, font_debug, screen)
+               update_interval, size, cols, rows, grid, font_debug, draw_cells, screen)
 
     pygame.display.flip()
     time.sleep(update_interval)
@@ -101,21 +105,24 @@ def main():
     while running:
         start_time = time.time()
 
-        running, draw_debug_info, draw_neighbor_count = get_inputs(
-            screen, size, running, draw_debug_info, draw_neighbor_count)
+        running, draw_debug_info, draw_cells, draw_neighbor_count = get_inputs(
+            screen, size, running, draw_debug_info, draw_cells, draw_neighbor_count)
 
         screen.fill((50, 50, 50))  # make the screen gray
 
-        grid_stuff(grid)
+        grid.update_from_update_list()
+        if draw_cells:
+            grid.draw_cells()
+        grid.create_update_list()
 
-        draw_debug(draw_debug_info, draw_neighbor_count,
-                   start_time, update_interval, size, cols, rows, grid, font_debug, screen)
+        draw_debug(draw_debug_info, draw_neighbor_count, start_time, update_interval,
+                   size, cols, rows, grid, font_debug, draw_cells, screen)
 
         pygame.display.flip()  # draw this frame
 
         sleep(update_interval, start_time)
 
-def get_inputs(screen, size, running, draw_debug_info, draw_neighbor_count):
+def get_inputs(screen, size, running, draw_debug_info, draw_cells, draw_neighbor_count):
     """placeholder"""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -137,19 +144,14 @@ def get_inputs(screen, size, running, draw_debug_info, draw_neighbor_count):
                 if keys[pygame.K_1]:
                     draw_debug_info = not draw_debug_info
                 if keys[pygame.K_2]:
+                    draw_cells = not draw_cells
+                if keys[pygame.K_3]:
                     draw_neighbor_count = not draw_neighbor_count
-    return running, draw_debug_info, draw_neighbor_count
+    return running, draw_debug_info, draw_cells, draw_neighbor_count
 
 
-def grid_stuff(grid):
-    """functions that have to do with the grid"""
-    grid.update_from_update_list()
-    grid.draw_cells()
-    grid.create_update_list()
-
-
-def draw_debug(draw_debug_info, draw_neighbor_count,
-               start_time, update_interval, size, cols, rows, grid, font_debug, screen):
+def draw_debug(draw_debug_info, draw_neighbor_count, start_time, update_interval,
+               size, cols, rows, grid, font_debug, draw_cells, screen):
     """code that has to do with drawing stats that can help with debugging"""
     if draw_neighbor_count:
         grid.draw_neighbor_count()
@@ -181,6 +183,9 @@ def draw_debug(draw_debug_info, draw_neighbor_count,
 
         # resolution
         text.append("resolution: " + str(size[0]) + "x" + str(size[1]))
+
+        # whether the cells are being drawn on the screen
+        text.append("draw cells: " + str(draw_cells))
 
         # whether the neighor count is being drawn, necessary to display it for when it's unreadable
         text.append("draw neighbor count: " + str(draw_neighbor_count))

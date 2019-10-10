@@ -1,6 +1,7 @@
 """placeholder"""
-import pygame
 import math
+
+import pygame
 
 
 class Grid:
