@@ -1,5 +1,6 @@
 """placeholder"""
 import pygame
+import math
 
 
 class Grid:
@@ -21,7 +22,7 @@ class Grid:
             [False for row in range(self.size[1])] for col in range(self.size[0])
         ]
 
-        offset = 250
+        offset = math.floor(self.size[0] / 2)
 
         # r_pentomino
         self.cells[0+offset][1+offset] = True
