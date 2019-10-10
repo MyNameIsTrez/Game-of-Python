@@ -13,7 +13,7 @@ by adding this in your settings.json file, inside of the curly brackets:
     "--extension-pkg-whitelist=pygame"  // The extension is "lxml" not "1xml"
   ]
 
-This is the order of the functions this program uses to calculate:
+This is the order of the functions this program uses to calculate the cells' next state:
   # setup
   grid.create_cells()
   grid.set_starter_cells()
@@ -45,7 +45,7 @@ def setup():
     """placeholder"""
     # CUSTOM VALUES
     fullscreen_bool = False
-    update_interval = 0
+    update_interval = 0.1
     draw_debug_info_bool = True
     draw_neighbor_count_bool = False
     font_type = "arial"
