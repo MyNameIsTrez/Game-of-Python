@@ -5,7 +5,7 @@ Game of Python - Game of Life implementation written in Python by MyNameIsTrez.
 Controls:
 
 escape - exits the program
-f - fullscreen
+f - fullscreen_bool
 d - draw the debug info
 n - draw the neighbor counts
 
@@ -31,13 +31,13 @@ from grid import Grid
 def setup():
     """placeholder"""
     # CUSTOM VALUES
-    fullscreen = False
+    fullscreen_bool = False
     update_interval = 0
-    draw_debug_info = True
-    draw_neighbor_count = False
+    draw_debug_info_bool = True
+    draw_neighbor_count_bool = False
     font_type = "arial"
     debug_font_size = 30
-    draw_cells = True
+    draw_cells_bool = True
 
     cols = 500
     rows = 500
@@ -53,7 +53,7 @@ def setup():
             min(rows * cell_size, screen_height))
 
     screen = pygame.display.set_mode(
-        size, pygame.FULLSCREEN if fullscreen else 0)
+        size, pygame.FULLSCREEN if fullscreen_bool else 0)
     font_debug = pygame.freetype.SysFont(font_type, debug_font_size)
     font_neighbor = pygame.freetype.SysFont(font_type, neighbor_font_size)
     grid = Grid(cols, rows, cell_size, font_neighbor,
@@ -61,47 +61,47 @@ def setup():
     grid.create_cells()
     grid.create_cells_neighbor_count()
 
-    return (screen, grid, update_interval, draw_debug_info,
-            draw_neighbor_count, size, font_debug, cols, rows, draw_cells)
+    return (screen, grid, update_interval, draw_debug_info_bool,
+            draw_neighbor_count_bool, size, font_debug, cols, rows, draw_cells_bool)
 
 
 def main():
     """placeholder"""
     first_start_time = time.time()
 
-    (screen, grid, update_interval, draw_debug_info, draw_neighbor_count,
-     size, font_debug, cols, rows, draw_cells) = setup()
+    (screen, grid, update_interval, draw_debug_info_bool, draw_neighbor_count_bool,
+     size, font_debug, cols, rows, draw_cells_bool) = setup()
 
     fill_screen(screen)
 
-    if draw_cells:
+    if draw_cells_bool:
         grid.draw_cells()
 
-    draw_debug(draw_debug_info, draw_neighbor_count, first_start_time,
-               update_interval, size, cols, rows, grid, font_debug, draw_cells, screen)
+    draw_debug(draw_debug_info_bool, draw_neighbor_count_bool, first_start_time,
+               update_interval, size, cols, rows, grid, font_debug, draw_cells_bool, screen)
 
     pygame.display.flip()
     time.sleep(update_interval)
 
     grid.create_cells_update_list()  # necessary for the while loop
 
-    running = True
-    while running:
+    running_bool = True
+    while running_bool:
         start_time = time.time()
 
-        running, draw_debug_info, draw_cells, draw_neighbor_count = get_inputs(
-            screen, size, running, draw_debug_info, draw_cells, draw_neighbor_count)
+        running_bool, draw_debug_info_bool, draw_cells_bool, draw_neighbor_count_bool = get_inputs(
+            screen, size, running_bool, draw_debug_info_bool, draw_cells_bool, draw_neighbor_count_bool)
 
         fill_screen(screen)
 
         grid.update_cells_neighbor_count()
         grid.update_cells_state()
-        if draw_cells:
+        if draw_cells_bool:
             grid.draw_cells()
         grid.create_cells_update_list()
 
-        draw_debug(draw_debug_info, draw_neighbor_count, start_time, update_interval,
-                   size, cols, rows, grid, font_debug, draw_cells, screen)
+        draw_debug(draw_debug_info_bool, draw_neighbor_count_bool, start_time, update_interval,
+                   size, cols, rows, grid, font_debug, draw_cells_bool, screen)
 
         pygame.display.flip()  # draw this frame
 
@@ -111,7 +111,7 @@ def fill_screen(screen):
     """placeholder"""
     screen.fill((50, 50, 50))  # make the screen gray
 
-def get_inputs(screen, size, running, draw_debug_info, draw_cells, draw_neighbor_count):
+def get_inputs(screen, size, running_bool, draw_debug_info_bool, draw_cells_bool, draw_neighbor_count_bool):
     """placeholder"""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -121,8 +121,8 @@ def get_inputs(screen, size, running, draw_debug_info, draw_cells, draw_neighbor
             keys = pygame.key.get_pressed() # to register multiple keys held down
             # exit the program
             if event.key == pygame.K_ESCAPE:
-                running = False # sets running to False to exit the while loop
-            # toggle fullscreen
+                running_bool = False # sets running_bool to False to exit the while loop
+            # toggle fullscreen_bool
             if event.key == pygame.K_f:
                 if screen.get_flags() & pygame.FULLSCREEN:
                     pygame.display.set_mode(size)
@@ -131,21 +131,21 @@ def get_inputs(screen, size, running, draw_debug_info, draw_cells, draw_neighbor
             # what debug info to draw
             if keys[pygame.K_d]:
                 if keys[pygame.K_1]:
-                    draw_debug_info = not draw_debug_info
+                    draw_debug_info_bool = not draw_debug_info_bool
                 if keys[pygame.K_2]:
-                    draw_cells = not draw_cells
+                    draw_cells_bool = not draw_cells_bool
                 if keys[pygame.K_3]:
-                    draw_neighbor_count = not draw_neighbor_count
-    return running, draw_debug_info, draw_cells, draw_neighbor_count
+                    draw_neighbor_count_bool = not draw_neighbor_count_bool
+    return running_bool, draw_debug_info_bool, draw_cells_bool, draw_neighbor_count_bool
 
 
-def draw_debug(draw_debug_info, draw_neighbor_count, start_time, update_interval,
-               size, cols, rows, grid, font_debug, draw_cells, screen):
+def draw_debug(draw_debug_info_bool, draw_neighbor_count_bool, start_time, update_interval,
+               size, cols, rows, grid, font_debug, draw_cells_bool, screen):
     """code that has to do with drawing stats that can help with debugging"""
-    if draw_neighbor_count:
-        grid.draw_neighbor_count()
+    if draw_neighbor_count_bool:
+        grid.draw_neighbor_count_bool()
 
-    if draw_debug_info:
+    if draw_debug_info_bool:
         text = []
 
         partial_time_elapsed = time.time() - start_time
@@ -165,7 +165,7 @@ def draw_debug(draw_debug_info, draw_neighbor_count, start_time, update_interval
             text.append("the program can run at " +
                         str(potential_speed_multiplier) + "x the current speed")
         else:
-            text.append("the program is running as fast as it can!")
+            text.append("the program is running_bool as fast as it can!")
 
         # grid size
         text.append("grid size: " + str(cols) + "x" + str(rows))
@@ -174,10 +174,10 @@ def draw_debug(draw_debug_info, draw_neighbor_count, start_time, update_interval
         text.append("resolution: " + str(size[0]) + "x" + str(size[1]))
 
         # whether the cells are being drawn on the screen
-        text.append("draw cells: " + str(draw_cells))
+        text.append("draw cells: " + str(draw_cells_bool))
 
         # whether the neighor count is being drawn, necessary to display it for when it's unreadable
-        text.append("draw neighbor count: " + str(draw_neighbor_count))
+        text.append("draw neighbor count: " + str(draw_neighbor_count_bool))
 
         for i, val in enumerate(text):
             pos = (25, 25 + 40 * i)

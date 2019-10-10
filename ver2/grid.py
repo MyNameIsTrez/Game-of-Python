@@ -138,7 +138,7 @@ class Grid:
 
         return neighbors
 
-    def draw_neighbor_count(self):
+    def draw_neighbor_count_bool(self):
         """placeholder"""
         for col in range(len(self.update_list)):
             for row in range(len(self.update_list[col])):
