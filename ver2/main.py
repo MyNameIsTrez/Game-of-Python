@@ -18,20 +18,17 @@ This is the order of the functions this program uses to calculate the cells' nex
         grid.create_cells() # makes a 2D array called cells, and fills it with Falses
         grid.set_starter_cells() # sets some of the cells to True, according to r_pentomino/glider
 
-        grid.create_update_list() # makes a 2D array called update_list, and fills it with Falses
+    # main while loop
+        grid.create_update_list() # remakes a 2D array called update_list, and fills it with Falses
         grid.set_update_list() # sets alive cells and their (dead) neighbors to True in update_list
 
-    # main while loop
         # this next function seems unnecessary in tests, but it makes sense to call it every frame
         grid.create_neighbor_count() # (re)makes a 2D array with a neighbor count of 0 for each cell
         grid.set_neighbor_count() # uses update_list to update the neighbor count array
 
         grid.set_cells_state() # uses update_list to change the cell array
 
-        # drawing stuff goes here
-
-        grid.create_update_list() # remakes a 2D array called update_list, and fills it with Falses
-        grid.set_update_list() # sets alive cells and their (dead) neighbors to True in update_list
+        # drawing alive cells
 """
 
 import sys
@@ -79,9 +76,6 @@ def setup():
     grid.create_cells()
     grid.set_starter_cells()
 
-    grid.create_update_list()
-    grid.set_update_list()
-
     return (screen, grid, update_interval, draw_debug_info_bool,
             draw_neighbor_count_bool, size, font_debug, cols, rows, draw_cells_bool)
 
@@ -116,6 +110,9 @@ def main():
 
         fill_screen(screen)
 
+        grid.create_update_list()
+        grid.set_update_list()
+
         # this next function seems unnecessary in tests, but it makes sense to call it every frame
         grid.create_neighbor_count()
         grid.set_neighbor_count()
@@ -126,9 +123,6 @@ def main():
             grid.draw_cells()
 
         # grid.draw_updated_cells()
-
-        grid.create_update_list()
-        grid.set_update_list()
 
         draw_debug(draw_debug_info_bool, draw_neighbor_count_bool, start_time, update_interval,
                    size, cols, rows, grid, font_debug, draw_cells_bool, screen)
