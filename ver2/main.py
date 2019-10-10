@@ -37,7 +37,6 @@ def setup():
     draw_neighbor_count = False
     font_type = "arial"
     debug_font_size = 30
-    neighbor_font_size = 10
 
     cols = 500
     rows = 500
@@ -46,6 +45,7 @@ def setup():
     # INITIALIZATION
     pygame.init()
 
+    neighbor_font_size = cell_size
     info_object = pygame.display.Info()
     screen_width, screen_height = info_object.current_w, info_object.current_h
     size = (min(cols * cell_size, screen_width),
@@ -60,15 +60,32 @@ def setup():
     grid.create_cells()
     grid.create_cell_neighbors()
 
-    return screen, grid, update_interval, draw_debug_info, draw_neighbor_count, size, font_debug, cols, rows
+    items = {}
+    items["screen"] = screen
+    items["grid"] = grid
+    items["update_interval"] = update_interval
+    items["draw_debug_info"] = draw_debug_info
+    items["draw_neighbor_count"] = draw_neighbor_count
+    items["size"] = size
+    items["font_debug"] = font_debug
+    items["cols"] = cols
+    items["rows"] = rows
+    return items
 
 
 def main():
     """placeholder"""
     first_start_time = time.time()
-    screen, grid, update_interval, draw_debug_info, draw_neighbor_count, size, font_debug, cols, rows = setup()
-
-    grid.create_update_list()
+    items = setup()
+    screen = items["screen"]
+    grid = items["grid"]
+    update_interval = items["update_interval"]
+    draw_debug_info = items["draw_debug_info"]
+    draw_neighbor_count = items["draw_neighbor_count"]
+    size = items["size"]
+    font_debug = items["font_debug"]
+    cols = items["cols"]
+    rows = items["rows"]
 
     grid.draw_cells()
 
@@ -144,7 +161,7 @@ def draw_debug(draw_debug_info, draw_neighbor_count,
 
         # ms taken from max ms
         string = str(math.floor(partial_time_elapsed * 1000))
-        if (update_interval != 0):
+        if update_interval != 0:
             string += "/" + str(math.floor(update_interval * 1000)) + " ms"
         else:
             string += " ms"
@@ -158,12 +175,15 @@ def draw_debug(draw_debug_info, draw_neighbor_count,
                         str(potential_speed_multiplier) + "x the current speed")
         else:
             text.append("the program is running as fast as it can!")
-        
+
         # grid size
         text.append("grid size: " + str(cols) + "x" + str(rows))
-        
+
         # resolution
         text.append("resolution: " + str(size[0]) + "x" + str(size[1]))
+
+        # whether the neighor count is being drawn, necessary to display it for when it's unreadable
+        text.append("draw neighbor count: " + str(draw_neighbor_count))
 
         for i, val in enumerate(text):
             pos = (25, 25 + 40 * i)
