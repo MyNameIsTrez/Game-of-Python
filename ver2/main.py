@@ -20,13 +20,14 @@ This is the order of the functions this program uses to calculate the cells' nex
 
     # main while loop
         # this next line is unnecessary, just only save the updated cells in an empty array
-        grid.create_update_list() # remakes a 2D array called update_list, and fills it with Falses
+        # (re)makes an empty 1D array for storing the cells that are alive, and their neighbors
+        grid.create_update_list()
         grid.set_update_list() # sets alive cells and their (dead) neighbors to True in update_list
 
         # this next function seems unnecessary in tests, but it makes sense to call it every frame
-        # this next line is also unnecessary, just only save the cells with neighbor counts in an empty array
-        grid.create_neighbor_count() # (re)makes a 2D array with a neighbor count of 0 for each cell
-        grid.set_neighbor_count() # uses update_list to update the neighbor count array
+        # (re)makes an empty 1D array for storing the cells that have a neighbor count
+        grid.create_neighbor_count_list()
+        grid.set_neighbor_count_list_list() # uses update_list to update the neighbor count array
 
         grid.set_cells_state() # uses update_list to change the cell array
 
@@ -49,7 +50,7 @@ def setup():
     fullscreen_bool = False
     update_interval = 0
     draw_debug_info_bool = True
-    draw_neighbor_count_bool = False
+    draw_neighbor_count_list_bool = False
     font_type = "arial"
     debug_font_size = 30
     draw_cells_bool = True
@@ -79,14 +80,14 @@ def setup():
     grid.set_starter_cells()
 
     return (screen, grid, update_interval, draw_debug_info_bool,
-            draw_neighbor_count_bool, size, font_debug, cols, rows, draw_cells_bool)
+            draw_neighbor_count_list_bool, size, font_debug, cols, rows, draw_cells_bool)
 
 
 def main():
     """placeholder"""
     first_start_time = time.time()
 
-    (screen, grid, update_interval, draw_debug_info_bool, draw_neighbor_count_bool,
+    (screen, grid, update_interval, draw_debug_info_bool, draw_neighbor_count_list_bool,
      size, font_debug, cols, rows, draw_cells_bool) = setup()
 
     fill_screen(screen)
@@ -96,19 +97,20 @@ def main():
 
     # grid.draw_updated_cells()
 
-    draw_debug(draw_debug_info_bool, draw_neighbor_count_bool, first_start_time,
+    draw_debug(draw_debug_info_bool, draw_neighbor_count_list_bool, first_start_time,
                update_interval, size, cols, rows, grid, font_debug, draw_cells_bool, screen)
 
     pygame.display.flip()
-    time.sleep(update_interval)
+
+    sleep(update_interval, first_start_time)
 
     running_bool = True
     while running_bool:
         start_time = time.time()
 
-        running_bool, draw_debug_info_bool, draw_cells_bool, draw_neighbor_count_bool = get_inputs(
+        running_bool, draw_debug_info_bool, draw_cells_bool, draw_neighbor_count_list_bool = get_inputs(
             screen, size, running_bool, draw_debug_info_bool,
-            draw_cells_bool, draw_neighbor_count_bool)
+            draw_cells_bool, draw_neighbor_count_list_bool)
 
         fill_screen(screen)
 
@@ -116,8 +118,8 @@ def main():
         grid.set_update_list()
 
         # this next function seems unnecessary in tests, but it makes sense to call it every frame
-        grid.create_neighbor_count()
-        grid.set_neighbor_count()
+        grid.create_neighbor_count_list()
+        grid.set_neighbor_count_list_list()
 
         grid.set_cells_state()
 
@@ -126,7 +128,7 @@ def main():
 
         # grid.draw_updated_cells()
 
-        draw_debug(draw_debug_info_bool, draw_neighbor_count_bool, start_time, update_interval,
+        draw_debug(draw_debug_info_bool, draw_neighbor_count_list_bool, start_time, update_interval,
                    size, cols, rows, grid, font_debug, draw_cells_bool, screen)
 
         pygame.display.flip()  # draw this frame
@@ -139,41 +141,11 @@ def fill_screen(screen):
     screen.fill((50, 50, 50))  # make the screen gray
 
 
-def get_inputs(screen, size, running_bool, draw_debug_info_bool,
-               draw_cells_bool, draw_neighbor_count_bool):
-    """placeholder"""
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            sys.exit()
-
-        if event.type == pygame.KEYDOWN:
-            # needed to register multiple keys being held down at once
-            keys = pygame.key.get_pressed()
-            # exit the program
-            if event.key == pygame.K_ESCAPE:
-                running_bool = False  # sets running_bool to False to exit the while loop
-            # toggle fullscreen_bool
-            if event.key == pygame.K_f:
-                if screen.get_flags() & pygame.FULLSCREEN:
-                    pygame.display.set_mode(size)
-                else:
-                    pygame.display.set_mode(size, pygame.FULLSCREEN)
-            # what debug info to draw
-            if keys[pygame.K_d]:
-                if keys[pygame.K_1]:
-                    draw_debug_info_bool = not draw_debug_info_bool
-                if keys[pygame.K_2]:
-                    draw_cells_bool = not draw_cells_bool
-                if keys[pygame.K_3]:
-                    draw_neighbor_count_bool = not draw_neighbor_count_bool
-    return running_bool, draw_debug_info_bool, draw_cells_bool, draw_neighbor_count_bool
-
-
-def draw_debug(draw_debug_info_bool, draw_neighbor_count_bool, start_time, update_interval,
+def draw_debug(draw_debug_info_bool, draw_neighbor_count_list_bool, start_time, update_interval,
                size, cols, rows, grid, font_debug, draw_cells_bool, screen):
     """code that has to do with drawing stats that can help with debugging"""
-    if draw_neighbor_count_bool:
-        grid.draw_neighbor_count_bool()
+    if draw_neighbor_count_list_bool:
+        grid.draw_neighbor_count_list_bool()
 
     if draw_debug_info_bool:
         text = []
@@ -208,7 +180,8 @@ def draw_debug(draw_debug_info_bool, draw_neighbor_count_bool, start_time, updat
         text.append("draw cells: " + str(draw_cells_bool))
 
         # whether the neighor count is being drawn, necessary to display it for when it's unreadable
-        text.append("draw neighbor count: " + str(draw_neighbor_count_bool))
+        text.append("draw neighbor count: " +
+                    str(draw_neighbor_count_list_bool))
 
         for i, val in enumerate(text):
             pos = (25, 25 + 40 * i)
@@ -220,6 +193,36 @@ def sleep(update_interval, start_time):
     final_time_elapsed = time.time() - start_time
     sleep_time = max(update_interval - final_time_elapsed, 0)
     time.sleep(sleep_time)
+
+
+def get_inputs(screen, size, running_bool, draw_debug_info_bool,
+               draw_cells_bool, draw_neighbor_count_list_bool):
+    """placeholder"""
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            sys.exit()
+
+        if event.type == pygame.KEYDOWN:
+            # needed to register multiple keys being held down at once
+            keys = pygame.key.get_pressed()
+            # exit the program
+            if event.key == pygame.K_ESCAPE:
+                running_bool = False  # sets running_bool to False to exit the while loop
+            # toggle fullscreen_bool
+            if event.key == pygame.K_f:
+                if screen.get_flags() & pygame.FULLSCREEN:
+                    pygame.display.set_mode(size)
+                else:
+                    pygame.display.set_mode(size, pygame.FULLSCREEN)
+            # what debug info to draw
+            if keys[pygame.K_d]:
+                if keys[pygame.K_1]:
+                    draw_debug_info_bool = not draw_debug_info_bool
+                if keys[pygame.K_2]:
+                    draw_cells_bool = not draw_cells_bool
+                if keys[pygame.K_3]:
+                    draw_neighbor_count_list_bool = not draw_neighbor_count_list_bool
+    return running_bool, draw_debug_info_bool, draw_cells_bool, draw_neighbor_count_list_bool
 
 
 main()

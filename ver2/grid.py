@@ -13,7 +13,7 @@ class Grid:
         self.font_neighbor = font_neighbor
         self.screen = screen
         self.cells = None
-        self.neighbor_count = None
+        self.neighbor_count_list = None
         self.update_list = None
         self.starter_cells_blueprint = starter_cells_blueprint
 
@@ -44,14 +44,9 @@ class Grid:
             self.cells[2+offset_x][1+offset_y] = True
             self.cells[2+offset_x][0+offset_y] = True
 
-    def create_neighbor_count(self):
-        """(re)makes a 2D array with a neighbor count of 0 for each cell"""
-        # (re)makes a 2D array with a neighbor count of 0 for each cell
-        self.neighbor_count = [
-            [0 for row in range(self.size[1])] for col in range(self.size[0])
-        ]
-
     def create_update_list(self):
+        # """(re)makes an empty 1D array for storing the cells that are alive, and their neighbors"""
+        # self.update_list = []
         """(re)makes a 2D array called update_list, and fills it with Falses"""
         # create a 2D array filled with Falses, to hold the cells in
         self.update_list = [
@@ -100,16 +95,25 @@ class Grid:
         if (not bottom_edge and not right_edge):
             self.update_list[col+1][row+1] = True
 
-    def set_neighbor_count(self):
+    def create_neighbor_count_list(self):
+        # """(re)makes an empty 1D array for storing the cells that have a neighbor count"""
+        # self.neighbor_count_list = []
+        """(re)makes a 2D array with a neighbor count of 0 for each cell"""
+        # (re)makes a 2D array with a neighbor count of 0 for each cell
+        self.neighbor_count_list = [
+            [0 for row in range(self.size[1])] for col in range(self.size[0])
+        ]
+
+    def set_neighbor_count_list_list(self):
         """uses update_list to update the neighbor count array"""
         for col in range(len(self.update_list)):
             for row in range(len(self.update_list[col])):
                 if self.update_list[col][row]:
                     # gets and then sets the number of alive neighbors around this cell
-                    neighbors = self.get_neighbor_count(col, row)
-                    self.neighbor_count[col][row] = neighbors
+                    neighbors = self.get_neighbor_count_list(col, row)
+                    self.neighbor_count_list[col][row] = neighbors
 
-    def get_neighbor_count(self, col, row):
+    def get_neighbor_count_list(self, col, row):
         """placeholder"""
         top_edge = row == 0
         bottom_edge = row == self.size[1] - 1
@@ -145,23 +149,11 @@ class Grid:
 
         return neighbors
 
-    def draw_neighbor_count_bool(self):
-        """placeholder"""
-        for col in range(len(self.update_list)):
-            for row in range(len(self.update_list[col])):
-                if self.update_list[col][row]:
-                    neighbors = self.get_neighbor_count(col, row)
-
-                    pos = (col * self.cell_size + 0.5 * self.cell_size,
-                           row * self.cell_size + 0.5 * self.cell_size)
-                    self.font_neighbor.render_to(
-                        self.screen, pos, str(neighbors), (255, 50, 50))
-
     def set_cells_state(self):
         """uses update_list to change the cell array"""
         for col in range(len(self.update_list)):
             for row in range(len(self.update_list[col])):
-                neighbors = self.neighbor_count[col][row]
+                neighbors = self.neighbor_count_list[col][row]
                 if neighbors == 3:
                     self.cells[col][row] = True
                 elif neighbors != 2:
@@ -180,6 +172,18 @@ class Grid:
                          self.cell_size, self.cell_size),  # width, height
                         0  # thickness, 0 means fill instead
                     )
+
+    def draw_neighbor_count_list_bool(self):
+        """placeholder"""
+        for col in range(len(self.update_list)):
+            for row in range(len(self.update_list[col])):
+                if self.update_list[col][row]:
+                    neighbors = self.get_neighbor_count_list(col, row)
+
+                    pos = (col * self.cell_size + 0.5 * self.cell_size,
+                           row * self.cell_size + 0.5 * self.cell_size)
+                    self.font_neighbor.render_to(
+                        self.screen, pos, str(neighbors), (255, 50, 50))
 
     def draw_updated_cells(self):
         """placeholder"""
