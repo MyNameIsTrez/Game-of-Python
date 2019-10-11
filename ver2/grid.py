@@ -12,47 +12,47 @@ class Grid:
         self.cell_size = cell_size
         self.font_neighbor = font_neighbor
         self.screen = screen
-        self.cells = None
+        self.cells_list = None
         self.neighbor_count_list = None
         self.update_list = None
         self.starter_cells_blueprint = starter_cells_blueprint
 
     def create_cells(self):
-        """makes a 2D array called cells, and fills it with Falses"""
-        # create a 2D array filled with Falses, to hold the states of the cells in
-        self.cells = [
+        """makes a 2D array called cells_list, and fills it with Falses"""
+        # create a 2D array filled with Falses, to hold the states of the cells_list in
+        self.cells_list = [
             [False for row in range(self.size[1])] for col in range(self.size[0])
         ]
 
     def set_starter_cells(self):
-        """sets some of the cells to True, according to r_pentomino/glider"""
+        """sets some of the cells_list to True, according to r_pentomino/glider"""
         offset_x = math.floor(self.size[0] / 2)
         offset_y = math.floor(self.size[1] / 2)
 
         if self.starter_cells_blueprint == 1:
             # r_pentomino
-            self.cells[0+offset_x][1+offset_y] = True
-            self.cells[1+offset_x][0+offset_y] = True
-            self.cells[1+offset_x][1+offset_y] = True
-            self.cells[1+offset_x][2+offset_y] = True
-            self.cells[2+offset_x][0+offset_y] = True
+            self.cells_list[0+offset_x][1+offset_y] = True
+            self.cells_list[1+offset_x][0+offset_y] = True
+            self.cells_list[1+offset_x][1+offset_y] = True
+            self.cells_list[1+offset_x][2+offset_y] = True
+            self.cells_list[2+offset_x][0+offset_y] = True
         else:
             # glider, useful for seeing if the cell states are being set incorrectly
-            self.cells[0+offset_x][1+offset_y] = True
-            self.cells[1+offset_x][2+offset_y] = True
-            self.cells[2+offset_x][2+offset_y] = True
-            self.cells[2+offset_x][1+offset_y] = True
-            self.cells[2+offset_x][0+offset_y] = True
+            self.cells_list[0+offset_x][1+offset_y] = True
+            self.cells_list[1+offset_x][2+offset_y] = True
+            self.cells_list[2+offset_x][2+offset_y] = True
+            self.cells_list[2+offset_x][1+offset_y] = True
+            self.cells_list[2+offset_x][0+offset_y] = True
 
     def create_update_list(self):
-        """(re)makes an empty 1D array for storing the cells that are alive, and their neighbors"""
+        """(re)makes an empty 1D array for storing the cells_list that are alive, and their neighbors"""
         self.update_list = []
 
     def set_update_list(self):
-        """sets alive cells and their (dead) neighbors to True in update_list"""
-        for col in range(len(self.cells)):
-            for row in range(len(self.cells[col])):
-                if self.cells[col][row]:
+        """sets alive cells_list and their (dead) neighbors to True in update_list"""
+        for col in range(len(self.cells_list)):
+            for row in range(len(self.cells_list[col])):
+                if self.cells_list[col][row]:
                     # adds itself to update_list
                     self.update_list.append((col, row))
                     # adds its neighbors to update_list
@@ -93,7 +93,7 @@ class Grid:
             self.update_list.append((col+1, row+1))
 
     def create_neighbor_count_list(self):
-        # """(re)makes an empty 1D array for storing the cells that have a neighbor count"""
+        # """(re)makes an empty 1D array for storing the cells_list that have a neighbor count"""
         # self.neighbor_count_list = []
         """(re)makes a 2D array with a neighbor count of 0 for each cell"""
         self.neighbor_count_list = [
@@ -117,28 +117,28 @@ class Grid:
 
         # top-left
         if (not top_edge and not left_edge):
-            neighbors += self.cells[col-1][row-1]
+            neighbors += self.cells_list[col-1][row-1]
         # top
         if not top_edge:
-            neighbors += self.cells[col][row-1]
+            neighbors += self.cells_list[col][row-1]
         # top-right
         if not top_edge and not right_edge:
-            neighbors += self.cells[col+1][row-1]
+            neighbors += self.cells_list[col+1][row-1]
         # left
         if not left_edge:
-            neighbors += self.cells[col-1][row]
+            neighbors += self.cells_list[col-1][row]
         # right
         if not right_edge:
-            neighbors += self.cells[col+1][row]
+            neighbors += self.cells_list[col+1][row]
         # bottom-left
         if not bottom_edge and not left_edge:
-            neighbors += self.cells[col-1][row+1]
+            neighbors += self.cells_list[col-1][row+1]
         # bottom
         if not bottom_edge:
-            neighbors += self.cells[col][row+1]
+            neighbors += self.cells_list[col][row+1]
         # bottom-right
         if (not bottom_edge and not right_edge):
-            neighbors += self.cells[col+1][row+1]
+            neighbors += self.cells_list[col+1][row+1]
 
         return neighbors
 
@@ -147,16 +147,16 @@ class Grid:
         for pos in self.update_list:
             neighbors = self.neighbor_count_list[pos[0]][pos[1]]
             if neighbors == 3:
-                self.cells[pos[0]][pos[1]] = True
+                self.cells_list[pos[0]][pos[1]] = True
             elif neighbors != 2:
-                self.cells[pos[0]][pos[1]] = False
+                self.cells_list[pos[0]][pos[1]] = False
 
     def draw_cells(self):
         """placeholder"""
         # we have to use range(len()) to get the index
-        for col in range(len(self.cells)):
-            for row in range(len(self.cells[col])):
-                if self.cells[col][row]:
+        for col in range(len(self.cells_list)):
+            for row in range(len(self.cells_list[col])):
+                if self.cells_list[col][row]:
                     pygame.draw.rect(
                         self.screen, (255, 255, 255),  # white
                         (col * self.cell_size,  # x

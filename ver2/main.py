@@ -13,25 +13,25 @@ by adding this in your settings.json file, inside of the curly brackets:
         "--extension-pkg-whitelist=pygame"  // The extension is "lxml" not "1xml"
     ]
 
-This is the order of the functions this program uses to calculate the cells' next state:
+This is the order of the functions this program uses to calculate the cells_list' next state:
     # setup
-        grid.create_cells() # makes a 2D array called cells, and fills it with Falses
-        grid.set_starter_cells() # sets some of the cells to True, according to r_pentomino/glider
+        grid.create_cells() # makes a 2D array called cells_list, and fills it with Falses
+        grid.set_starter_cells() # sets some of the cells_list to True, according to r_pentomino/glider
 
     # main while loop
-        # this next line is unnecessary, just only save the updated cells in an empty array
-        # (re)makes an empty 1D array for storing the cells that are alive, and their neighbors
+        # this next line is unnecessary, just only save the updated cells_list in an empty array
+        # (re)makes an empty 1D array for storing the cells_list that are alive, and their neighbors
         grid.create_update_list()
-        grid.set_update_list() # sets alive cells and their (dead) neighbors to True in update_list
+        grid.set_update_list() # sets alive cells_list and their (dead) neighbors to True in update_list
 
         # this next function seems unnecessary in tests, but it makes sense to call it every frame
-        # (re)makes an empty 1D array for storing the cells that have a neighbor count
+        # (re)makes an empty 1D array for storing the cells_list that have a neighbor count
         grid.create_neighbor_count_list()
         grid.set_neighbor_count_list_list() # uses update_list to update the neighbor count array
 
         grid.set_cells_state() # uses update_list to change the cell array
 
-        # drawing alive cells
+        # drawing alive cells_list
 """
 
 import sys
@@ -176,8 +176,8 @@ def draw_debug(draw_debug_info_bool, draw_neighbor_count_list_bool, start_time, 
         # resolution
         text.append("resolution: " + str(size[0]) + "x" + str(size[1]))
 
-        # whether the cells are being drawn on the screen
-        text.append("draw cells: " + str(draw_cells_bool))
+        # whether the cells_list are being drawn on the screen
+        text.append("draw cells_list: " + str(draw_cells_bool))
 
         # whether the neighor count is being drawn, necessary to display it for when it's unreadable
         text.append("draw neighbor count: " +
