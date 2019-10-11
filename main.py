@@ -4,33 +4,13 @@ Game of Python - Game of Life implementation written in Python by MyNameIsTrez.
 Controls:
     escape - exits the program
     f - fullscreen_bool
-    d - draw the debug info
-    n - draw the neighbor counts
+    1 to 4 on the keyboard - toggle things that are drawn
 
-You can temporarily get rid of most of the false alerts in your IDE
+You can temporarily get rid of most of the pylint alerts in the IDE
 by adding this in your settings.json file, inside of the curly brackets:
     "python.linting.pylintArgs": [
         "--extension-pkg-whitelist=pygame"  // The extension is "lxml" not "1xml"
     ]
-
-This is the order of the functions this program uses to calculate the cells_list' next state:
-    # setup
-        grid.set_starter_cells_list() # sets some of the cells_list to True, according to r_pentomino/glider
-
-    # main while loop
-        # this next line is unnecessary, just only save the updated cells_list in an empty array
-        # (re)makes an empty 1D array for storing the cells_list that are alive, and their neighbors
-        grid.create_update_list()
-        grid.set_update_list() # sets alive cells_list and their (dead) neighbors to True in update_list
-
-        # this next function seems unnecessary in tests, but it makes sense to call it every frame
-        # (re)makes an empty 1D array for storing the cells_list that have a neighbor count
-        grid.create_neighbor_count_list()
-        grid.set_neighbor_count_list() # uses update_list to update the neighbor count array
-
-        grid.change_cells_list_states() # uses update_list to change the cell array
-
-        # drawing alive cells
 """
 
 import sys
@@ -48,7 +28,7 @@ def setup():
     # CUSTOM VALUES
     update_interval = 0
     starter_cells_blueprint = 1  # 1 = r_pentomino, 2 = glider
-    fullscreen_bool = False
+    fullscreen_bool = True
     draw_debug_info_bool = True
     draw_cells_bool = True
     draw_updated_cells_bool = False
@@ -56,9 +36,9 @@ def setup():
     font_type = "arial"
     debug_font_size = 30
 
-    cols = 500
-    rows = 500
-    cell_size = 2
+    cols = 50
+    rows = 50
+    cell_size = 20
 
     # INITIALIZATION
     pygame.init()
@@ -68,8 +48,10 @@ def setup():
     display_h = info_object.current_h
     size = (cols * cell_size, rows * cell_size)
 
+    if fullscreen_bool:
+        pygame.display.set_mode((display_w, display_h))
     screen = pygame.display.set_mode(
-        size, pygame.FULLSCREEN if fullscreen_bool else 0)
+        (0, 0) if fullscreen_bool else size, pygame.FULLSCREEN if fullscreen_bool else 0)
     font_debug = pygame.freetype.SysFont(font_type, debug_font_size)
 
     font_neighbor = pygame.freetype.SysFont(font_type, cell_size)
@@ -78,12 +60,8 @@ def setup():
 
     grid.offset_x_fullscreen = (display_w - size[0]) / 2
     grid.offset_y_fullscreen = (display_h - size[1]) / 2
-    if fullscreen_bool:
-        grid.offset_x = grid.offset_x_fullscreen
-        grid.offset_y = grid.offset_y_fullscreen
-    else:
-        grid.offset_x = 0
-        grid.offset_y = 0
+    grid.offset_x = grid.offset_x_fullscreen if fullscreen_bool else 0
+    grid.offset_y = grid.offset_y_fullscreen if fullscreen_bool else 0
 
     grid.set_starter_cells_list()
 
