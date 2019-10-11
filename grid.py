@@ -7,7 +7,7 @@ import pygame
 class Grid:
     """placeholder"""
 
-    def __init__(self, cols, rows, cell_size, font_neighbor, starter_cells_blueprint, screen):
+    def __init__(self, cols, rows, cell_size, font_neighbor, starter_cells_blueprint, offset_x, offset_y, screen):
         self.size = (cols, rows)
         self.cell_size = cell_size
         self.font_neighbor = font_neighbor
@@ -17,6 +17,8 @@ class Grid:
         self.neighbor_count_list = None
         self.update_list = None
         self.starter_cells_blueprint = starter_cells_blueprint
+        self.offset_x = offset_x
+        self.offset_y = offset_y
 
     def set_starter_cells_list(self):
         """adds some cells to cells_list, according to the r_pentomino/glider blueprints"""
@@ -149,19 +151,19 @@ class Grid:
         for cell in self.cells_list:
             pygame.draw.rect(
                 self.screen, (255, 255, 255),  # white
-                (cell[0] * self.cell_size,  # x
-                 cell[1] * self.cell_size,  # y
+                (self.offset_x + cell[0] * self.cell_size,  # x
+                 self.offset_y + cell[1] * self.cell_size,  # y
                  self.cell_size, self.cell_size),  # width, height
                 0  # thickness, 0 means fill instead
             )
 
     def draw_neighbor_count_list(self):
         """placeholder"""
-        for cell in self.update_list:
-            neighbors = self.get_neighbor_count_list(cell[0], cell[1])
+        for cell in self.neighbor_count_list:
+            neighbors = cell[2]
 
-            coords = (cell[0] * self.cell_size + 0.5 * self.cell_size,
-                      cell[1] * self.cell_size + 0.5 * self.cell_size)
+            coords = (self.offset_x + cell[0] * self.cell_size + 0.5 * self.cell_size,
+                      self.offset_y + cell[1] * self.cell_size + 0.5 * self.cell_size)
             self.font_neighbor.render_to(
                 self.screen, coords, str(neighbors), (255, 50, 50))
 
@@ -170,8 +172,8 @@ class Grid:
         for cell in self.update_list:
             pygame.draw.rect(
                 self.screen, (255, 0, 0),  # red
-                (cell[0] * self.cell_size,  # x
-                 cell[1] * self.cell_size,  # y
+                (self.offset_x + cell[0] * self.cell_size,  # x
+                 self.offset_y + cell[1] * self.cell_size,  # y
                  self.cell_size, self.cell_size),  # width, height
                 0  # thickness, 0 means fill instead
             )
