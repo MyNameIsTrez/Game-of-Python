@@ -19,6 +19,7 @@ class Grid:
         self.starter_cells_blueprint = starter_cells_blueprint
         self.offset_x = 0
         self.offset_y = 0
+        self.total_cell_count = cols * rows
 
     def set_starter_cells_list(self):
         """adds some cells to cells_list, according to the r_pentomino/glider blueprints"""

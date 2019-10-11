@@ -3,8 +3,16 @@ Game of Python - Game of Life implementation written in Python by MyNameIsTrez.
 
 Controls:
     escape - exits the program
-    f - fullscreen_bool
-    1 to 4 on the keyboard - toggle things that are drawn
+    f - go to fullscreen/windowed mode
+    1, 2, 3, 4 on the keyboard - toggles what is drawn
+
+Rules of Game of Life:
+    - Each white rectangle on the screen is called an 'alive cell',
+      the surrounding light gray rectangles area consists of 'dead cells'.
+    - Each cell has 8 neighbors next to it.
+    - If a cell has 3 alive neighbors, it also becomes alive/stays alive.
+    - If a cell has 2 alive neighbors, it stays alive.
+    - If a cell has any other number of neighbors, it dies of under-/overpopulation.
 
 You can temporarily get rid of most of the pylint alerts in the IDE
 by adding this in your settings.json file, inside of the curly brackets:
@@ -26,6 +34,10 @@ from grid import Grid
 def setup():
     """placeholder"""
     # CUSTOM VALUES
+    cols = 500
+    rows = 500
+    cell_size = 2
+
     update_interval = 0
     starter_cells_blueprint = 1  # 1 = r_pentomino, 2 = glider
     fullscreen_bool = True
@@ -35,10 +47,6 @@ def setup():
     draw_neighbor_count_list_bool = False
     font_type = "arial"
     debug_font_size = 30
-
-    cols = 50
-    rows = 50
-    cell_size = 20
 
     # INITIALIZATION
     pygame.init()
@@ -171,17 +179,25 @@ def draw_debug(draw_debug_info_bool, draw_neighbor_count_list_bool, start_time, 
         else:
             text.append("the program is running as fast as it can!")
 
-        text.append("grid size: " + str(cols) + "x" + str(rows))
-        text.append("program resolution: " + str(size[0]) + "x" + str(size[1]))
-        text.append("display resolution: " +
-                    str(display_w) + "x" + str(display_h))
+        text.append("grid size: " +
+                    str(grid.size[0]) + "x" + str(grid.size[1]))
+        text.append("total cell count: " + str(grid.total_cell_count))
+
+        text.append("cells dead: " +
+                    str(grid.total_cell_count - len(grid.cells_list)))
+        text.append("cells alive: " + str(len(grid.cells_list)))
+        text.append("cells updated: " + str(len(grid.update_list)))
+        text.append("cell neighbors: " + str(len(grid.neighbor_count_list)))
+
         text.append("draw cells: " + str(draw_cells_bool))
         text.append("draw updated cells: " + str(draw_updated_cells_bool))
         text.append("draw neighbor count: " +
                     str(draw_neighbor_count_list_bool))
-        text.append("cells alive: " + str(len(grid.cells_list)))
-        text.append("cells updated: " + str(len(grid.update_list)))
-        text.append("cell neighbors: " + str(len(grid.neighbor_count_list)))
+
+        text.append("cell size: " + str(grid.cell_size))
+        text.append("program resolution: " + str(size[0]) + "x" + str(size[1]))
+        text.append("display resolution: " +
+                    str(display_w) + "x" + str(display_h))
 
         for i, val in enumerate(text):
             pos = (25, 25 + 40 * i)
