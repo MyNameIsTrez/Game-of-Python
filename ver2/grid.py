@@ -103,12 +103,15 @@ class Grid:
 
     def set_neighbor_count_list_list(self):
         """uses update_list to update the neighbor count array"""
-        for col in range(len(self.update_list)):
-            for row in range(len(self.update_list[col])):
-                if self.update_list[col][row]:
-                    # gets and then sets the number of alive neighbors around this cell
-                    neighbors = self.get_neighbor_count_list(col, row)
-                    self.neighbor_count_list[col][row] = neighbors
+        for pos in self.update_list:
+            neighbors = self.get_neighbor_count_list(pos[0], pos[1])
+            self.neighbor_count_list[pos[0]][pos[1]] = neighbors
+        # for col in range(len(self.update_list)):
+        #     for row in range(len(self.update_list[col])):
+        #         if self.update_list[col][row]:
+        #             # gets and then sets the number of alive neighbors around this cell
+        #             neighbors = self.get_neighbor_count_list(col, row)
+        #             self.neighbor_count_list[col][row] = neighbors
 
     def get_neighbor_count_list(self, col, row):
         """placeholder"""
@@ -148,13 +151,12 @@ class Grid:
 
     def set_cells_state(self):
         """uses update_list to change the cell array"""
-        for col in range(len(self.update_list)):
-            for row in range(len(self.update_list[col])):
-                neighbors = self.neighbor_count_list[col][row]
-                if neighbors == 3:
-                    self.cells[col][row] = True
-                elif neighbors != 2:
-                    self.cells[col][row] = False
+        for pos in self.update_list:
+            neighbors = self.neighbor_count_list[pos[0]][pos[1]]
+            if neighbors == 3:
+                self.cells[pos[0]][pos[1]] = True
+            elif neighbors != 2:
+                self.cells[pos[0]][pos[1]] = False
 
     def draw_cells(self):
         """placeholder"""
@@ -172,26 +174,21 @@ class Grid:
 
     def draw_neighbor_count_list_bool(self):
         """placeholder"""
-        for col in range(len(self.update_list)):
-            for row in range(len(self.update_list[col])):
-                if self.update_list[col][row]:
-                    neighbors = self.get_neighbor_count_list(col, row)
+        for pos in self.update_list:
+            neighbors = self.get_neighbor_count_list(pos[0], pos[1])
 
-                    pos = (col * self.cell_size + 0.5 * self.cell_size,
-                           row * self.cell_size + 0.5 * self.cell_size)
-                    self.font_neighbor.render_to(
-                        self.screen, pos, str(neighbors), (255, 50, 50))
+            coords = (pos[0] * self.cell_size + 0.5 * self.cell_size,
+                      pos[1] * self.cell_size + 0.5 * self.cell_size)
+            self.font_neighbor.render_to(
+                self.screen, coords, str(neighbors), (255, 50, 50))
 
     def draw_updated_cells(self):
         """placeholder"""
-        # we have to use range(len()) to get the index
-        for col in range(len(self.update_list)):
-            for row in range(len(self.update_list[col])):
-                if self.update_list[col][row]:
-                    pygame.draw.rect(
-                        self.screen, (255, 0, 0),  # red
-                        (col * self.cell_size,  # x
-                         row * self.cell_size,  # y
-                         self.cell_size, self.cell_size),  # width, height
-                        0  # thickness, 0 means fill instead
-                    )
+        for pos in self.update_list:
+            pygame.draw.rect(
+                self.screen, (255, 0, 0),  # red
+                (pos[0] * self.cell_size,  # x
+                 pos[1] * self.cell_size,  # y
+                 self.cell_size, self.cell_size),  # width, height
+                0  # thickness, 0 means fill instead
+            )
