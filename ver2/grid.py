@@ -45,23 +45,20 @@ class Grid:
             self.cells[2+offset_x][0+offset_y] = True
 
     def create_update_list(self):
-        # """(re)makes an empty 1D array for storing the cells that are alive, and their neighbors"""
-        # self.update_list = []
-        """(re)makes a 2D array called update_list, and fills it with Falses"""
-        # create a 2D array filled with Falses, to hold the cells in
-        self.update_list = [
-            [False for row in range(self.size[1])] for col in range(self.size[0])
-        ]
+        """(re)makes an empty 1D array for storing the cells that are alive, and their neighbors"""
+        self.update_list = []
 
     def set_update_list(self):
         """sets alive cells and their (dead) neighbors to True in update_list"""
         for col in range(len(self.cells)):
             for row in range(len(self.cells[col])):
                 if self.cells[col][row]:
-                    # sets itself to True in update_list
-                    self.update_list[col][row] = True
-                    # add its neighbors to update_list
+                    # adds itself to update_list
+                    self.update_list.append((col, row))
+                    # adds its neighbors to update_list
                     self.set_neighbor_to_update_list(col, row)
+        # removes all duplicate entries
+        self.update_list = list(set(self.update_list))
 
     def set_neighbor_to_update_list(self, col, row):
         """placeholder"""
@@ -72,28 +69,28 @@ class Grid:
 
         # top-left
         if (not top_edge and not left_edge):
-            self.update_list[col-1][row-1] = True
+            self.update_list.append((col-1, row-1))
         # top
         if not top_edge:
-            self.update_list[col][row-1] = True
+            self.update_list.append((col, row-1))
         # top-right
         if not top_edge and not right_edge:
-            self.update_list[col+1][row-1] = True
+            self.update_list.append((col+1, row-1))
         # left
         if not left_edge:
-            self.update_list[col-1][row] = True
+            self.update_list.append((col-1, row))
         # right
         if not right_edge:
-            self.update_list[col+1][row] = True
+            self.update_list.append((col+1, row))
         # bottom-left
         if not bottom_edge and not left_edge:
-            self.update_list[col-1][row+1] = True
+            self.update_list.append((col-1, row+1))
         # bottom
         if not bottom_edge:
-            self.update_list[col][row+1] = True
+            self.update_list.append((col, row+1))
         # bottom-right
         if (not bottom_edge and not right_edge):
-            self.update_list[col+1][row+1] = True
+            self.update_list.append((col+1, row+1))
 
     def create_neighbor_count_list(self):
         # """(re)makes an empty 1D array for storing the cells that have a neighbor count"""
