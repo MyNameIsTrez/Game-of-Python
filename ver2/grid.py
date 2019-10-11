@@ -96,7 +96,6 @@ class Grid:
         # """(re)makes an empty 1D array for storing the cells that have a neighbor count"""
         # self.neighbor_count_list = []
         """(re)makes a 2D array with a neighbor count of 0 for each cell"""
-        # (re)makes a 2D array with a neighbor count of 0 for each cell
         self.neighbor_count_list = [
             [0 for row in range(self.size[1])] for col in range(self.size[0])
         ]
@@ -106,12 +105,6 @@ class Grid:
         for pos in self.update_list:
             neighbors = self.get_neighbor_count_list(pos[0], pos[1])
             self.neighbor_count_list[pos[0]][pos[1]] = neighbors
-        # for col in range(len(self.update_list)):
-        #     for row in range(len(self.update_list[col])):
-        #         if self.update_list[col][row]:
-        #             # gets and then sets the number of alive neighbors around this cell
-        #             neighbors = self.get_neighbor_count_list(col, row)
-        #             self.neighbor_count_list[col][row] = neighbors
 
     def get_neighbor_count_list(self, col, row):
         """placeholder"""
