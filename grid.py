@@ -47,18 +47,16 @@ class Grid:
         self.update_list = []
 
     def set_update_list(self):
-        """sets alive cells_list and their (dead) neighbors to True in update_list"""
-        for col in range(len(self.cells_list)):
-            for row in range(len(self.cells_list[col])):
-                if self.cells_list[col][row]:
-                    # adds itself to update_list
-                    self.update_list.append((col, row))
-                    # adds its neighbors to update_list
-                    self.set_neighbor_to_update_list(col, row)
+        """placeholder"""
+        for cell in self.cells_list:
+            # adds itself to update_list
+            self.update_list.append((cell[0], cell[1]))
+            # adds its neighbors to update_list
+            self.set_neighbors_to_update_list(cell[0], cell[1])
         # removes all duplicate entries
         self.update_list = list(set(self.update_list))
 
-    def set_neighbor_to_update_list(self, col, row):
+    def set_neighbors_to_update_list(self, col, row):
         """placeholder"""
         top_edge = row == 0
         bottom_edge = row == self.size[1] - 1
@@ -96,9 +94,9 @@ class Grid:
 
     def set_neighbor_count_list_list(self):
         """uses update_list to update the neighbor count array"""
-        for pos in self.update_list:
-            neighbors = self.get_neighbor_count_list(pos[0], pos[1])
-            self.neighbor_count_list.append((pos[0], pos[1], neighbors))
+        for cell in self.update_list:
+            neighbors = self.get_neighbor_count_list(cell[0], cell[1])
+            self.neighbor_count_list.append((cell[0], cell[1], neighbors))
 
     def get_neighbor_count_list(self, col, row):
         """placeholder"""
@@ -111,78 +109,77 @@ class Grid:
 
         # top-left
         if (not top_edge and not left_edge):
-            neighbors += self.cells_list[col-1][row-1]
+            neighbors += self.cell_inside_cells_list(col-1, row-1)
         # top
         if not top_edge:
-            neighbors += self.cells_list[col][row-1]
+            neighbors += self.cell_inside_cells_list(col, row-1)
         # top-right
         if not top_edge and not right_edge:
-            neighbors += self.cells_list[col+1][row-1]
+            neighbors += self.cell_inside_cells_list(col+1, row-1)
         # left
         if not left_edge:
-            neighbors += self.cells_list[col-1][row]
+            neighbors += self.cell_inside_cells_list(col-1, row)
         # right
         if not right_edge:
-            neighbors += self.cells_list[col+1][row]
+            neighbors += self.cell_inside_cells_list(col+1, row)
         # bottom-left
         if not bottom_edge and not left_edge:
-            neighbors += self.cells_list[col-1][row+1]
+            neighbors += self.cell_inside_cells_list(col-1, row+1)
         # bottom
         if not bottom_edge:
-            neighbors += self.cells_list[col][row+1]
+            neighbors += self.cell_inside_cells_list(col, row+1)
         # bottom-right
         if (not bottom_edge and not right_edge):
-            neighbors += self.cells_list[col+1][row+1]
+            neighbors += self.cell_inside_cells_list(col+1, row+1)
 
         return neighbors
+
+    def cell_inside_cells_list(self, col, row):
+        """returns True if the cell is inside cells_list, so if the cell is alive"""
+        for cell in self.cells_list:
+            if (cell[0] == col and cell[1] == row):
+                return True
+        return False
 
     def set_cells_state(self):
         """uses update_list to change the cell array"""
         for cell in self.neighbor_count_list:
             neighbors = cell[2]
             if neighbors == 3:
-                self.cells_list[cell[0]][cell[1]] = True
+                if not self.cell_inside_cells_list(cell[0], cell[1]):
+                    self.cells_list.append((cell[0], cell[1]))
             elif neighbors != 2:
-                self.cells_list[cell[0]][cell[1]] = False
+                if self.cell_inside_cells_list(cell[0], cell[1]):
+                    self.cells_list.remove((cell[0], cell[1]))
 
     def draw_cells(self):
         """placeholder"""
-        for col in range(len(self.cells_list)):
-            for row in range(len(self.cells_list[col])):
-                if self.cells_list[col][row]:
-                    pygame.draw.rect(
-                        self.screen, (255, 255, 255),  # white
-                        (col * self.cell_size,  # x
-                         row * self.cell_size,  # y
-                         self.cell_size, self.cell_size),  # width, height
-                        0  # thickness, 0 means fill instead
-                    )
-        # for pos in self.cells_list:
-        #     pygame.draw.rect(
-        #         self.screen, (255, 255, 255),  # white
-        #         (pos[0] * self.cell_size,  # x
-        #          pos[1] * self.cell_size,  # y
-        #          self.cell_size, self.cell_size),  # width, height
-        #         0  # thickness, 0 means fill instead
-        #     )
+        for cell in self.cells_list:
+            pygame.draw.rect(
+                self.screen, (255, 255, 255),  # white
+                (cell[0] * self.cell_size,  # x
+                 cell[1] * self.cell_size,  # y
+                 self.cell_size, self.cell_size),  # width, height
+                0  # thickness, 0 means fill instead
+            )
 
     def draw_neighbor_count_list_bool(self):
         """placeholder"""
-        for pos in self.update_list:
-            neighbors = self.get_neighbor_count_list(pos[0], pos[1])
+        for cell in self.update_list:
+            neighbors = self.get_neighbor_count_list(cell[0], cell[1])
 
-            coords = (pos[0] * self.cell_size + 0.5 * self.cell_size,
-                      pos[1] * self.cell_size + 0.5 * self.cell_size)
+            coords = (cell[0] * self.cell_size + 0.5 * self.cell_size,
+                      cell[1] * self.cell_size + 0.5 * self.cell_size)
             self.font_neighbor.render_to(
                 self.screen, coords, str(neighbors), (255, 50, 50))
 
     def draw_updated_cells(self):
         """placeholder"""
-        for pos in self.update_list:
+        for cell in self.update_list:
             pygame.draw.rect(
                 self.screen, (255, 0, 0),  # red
-                (pos[0] * self.cell_size,  # x
-                 pos[1] * self.cell_size,  # y
+                (cell[0] * self.cell_size,  # x
+                 cell[1] * self.cell_size,  # y
                  self.cell_size, self.cell_size),  # width, height
                 0  # thickness, 0 means fill instead
             )

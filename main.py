@@ -60,14 +60,6 @@ def setup():
     rows = 500
     cell_size = 2
 
-    # a = ((3, 5, 7), (6, 2, 3), (3, 5, 7), (5, 4, 6), (5, 8, 9))
-    # col = 5
-    # row = 8
-    # for cell in a:
-    #     if (cell[0] == col):
-    #         if (cell[1] == row):
-    #             print(cell[2])
-
     # INITIALIZATION
     pygame.init()
 
@@ -170,8 +162,12 @@ def draw_debug(draw_debug_info_bool, draw_neighbor_count_list_bool, start_time, 
         text.append(string)
 
         # potential_speed_multiplier
-        potential_speed_multiplier = round(
-            update_interval / partial_time_elapsed, 1)
+        if (partial_time_elapsed > 0):
+            potential_speed_multiplier = round(
+                update_interval / partial_time_elapsed, 1)
+        else:
+            potential_speed_multiplier = "?"
+
         if update_interval != 0:
             text.append("the program can run at " +
                         str(potential_speed_multiplier) + "x the current speed")
@@ -190,6 +186,8 @@ def draw_debug(draw_debug_info_bool, draw_neighbor_count_list_bool, start_time, 
         # whether the neighor count is being drawn, necessary to display it for when it's unreadable
         text.append("draw neighbor count: " +
                     str(draw_neighbor_count_list_bool))
+
+        text.append("cells alive: " + str(len(grid.cells_list)))
 
         for i, val in enumerate(text):
             pos = (25, 25 + 40 * i)
