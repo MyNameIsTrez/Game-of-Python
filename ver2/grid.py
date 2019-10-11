@@ -17,14 +17,14 @@ class Grid:
         self.update_list = None
         self.starter_cells_blueprint = starter_cells_blueprint
 
-    def create_cells(self):
+    def create_cells_list(self):
         """makes a 2D array called cells_list, and fills it with Falses"""
         # create a 2D array filled with Falses, to hold the states of the cells_list in
         self.cells_list = [
             [False for row in range(self.size[1])] for col in range(self.size[0])
         ]
 
-    def set_starter_cells(self):
+    def set_starter_cells_list(self):
         """sets some of the cells_list to True, according to r_pentomino/glider"""
         offset_x = math.floor(self.size[0] / 2)
         offset_y = math.floor(self.size[1] / 2)

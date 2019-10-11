@@ -15,8 +15,8 @@ by adding this in your settings.json file, inside of the curly brackets:
 
 This is the order of the functions this program uses to calculate the cells_list' next state:
     # setup
-        grid.create_cells() # makes a 2D array called cells_list, and fills it with Falses
-        grid.set_starter_cells() # sets some of the cells_list to True, according to r_pentomino/glider
+        grid.create_cells_list() # makes a 2D array called cells_list, and fills it with Falses
+        grid.set_starter_cells_list() # sets some of the cells_list to True, according to r_pentomino/glider
 
     # main while loop
         # this next line is unnecessary, just only save the updated cells_list in an empty array
@@ -31,7 +31,7 @@ This is the order of the functions this program uses to calculate the cells_list
 
         grid.set_cells_state() # uses update_list to change the cell array
 
-        # drawing alive cells_list
+        # drawing alive cells
 """
 
 import sys
@@ -76,8 +76,8 @@ def setup():
     grid = Grid(cols, rows, cell_size, font_neighbor,
                 starter_cells_blueprint, screen)  # create the grid
 
-    grid.create_cells()
-    grid.set_starter_cells()
+    grid.create_cells_list()
+    grid.set_starter_cells_list()
 
     return (screen, grid, update_interval, draw_debug_info_bool,
             draw_neighbor_count_list_bool, size, font_debug, cols, rows, draw_cells_bool)
