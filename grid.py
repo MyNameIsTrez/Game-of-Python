@@ -12,17 +12,14 @@ class Grid:
         self.cell_size = cell_size
         self.font_neighbor = font_neighbor
         self.screen = screen
-        self.cells_list = None
+        # makes a 1D array for storing the cols and rows of cells that are alive
+        self.cells_list = []
         self.neighbor_count_list = None
         self.update_list = None
         self.starter_cells_blueprint = starter_cells_blueprint
 
-    def create_cells_list(self):
-        """(re)makes an empty 1D array for storing the cols and rows of cells that are alive"""
-        self.cells_list = []
-
     def set_starter_cells_list(self):
-        """sets some of the cells in cells_list to True, according to r_pentomino/glider"""
+        """adds some cells to cells_list, according to the r_pentomino/glider blueprints"""
         o_x = math.floor(self.size[0] / 2)  # offset_x
         o_y = math.floor(self.size[1] / 2)  # offset_y
 
@@ -43,11 +40,9 @@ class Grid:
             self.cells_list.append((2+o_x, 0+o_y))
 
     def create_update_list(self):
-        """(re)makes an empty 1D array for storing the cells in cell_list that are alive, with their neighbors"""
+        """placeholder"""
         self.update_list = []
 
-    def set_update_list(self):
-        """placeholder"""
         for cell in self.cells_list:
             # adds itself to update_list
             self.update_list.append((cell[0], cell[1]))
@@ -89,11 +84,8 @@ class Grid:
             self.update_list.append((col+1, row+1))
 
     def create_neighbor_count_list(self):
-        """(re)makes an empty 1D array for storing the cells_list that have a neighbor count"""
+        """placeholder"""
         self.neighbor_count_list = []
-
-    def set_neighbor_count_list_list(self):
-        """uses update_list to update the neighbor count array"""
         for cell in self.update_list:
             neighbors = self.get_neighbor_count_list(cell[0], cell[1])
             self.neighbor_count_list.append((cell[0], cell[1], neighbors))
@@ -135,14 +127,14 @@ class Grid:
         return neighbors
 
     def cell_inside_cells_list(self, col, row):
-        """returns True if the cell is inside cells_list, so if the cell is alive"""
+        """returns True if the cell is inside cells_list"""
         for cell in self.cells_list:
             if (cell[0] == col and cell[1] == row):
                 return True
         return False
 
-    def set_cells_state(self):
-        """uses update_list to change the cell array"""
+    def change_cells_list_states(self):
+        """placeholder"""
         for cell in self.neighbor_count_list:
             neighbors = cell[2]
             if neighbors == 3:
@@ -163,7 +155,7 @@ class Grid:
                 0  # thickness, 0 means fill instead
             )
 
-    def draw_neighbor_count_list_bool(self):
+    def draw_neighbor_count_list(self):
         """placeholder"""
         for cell in self.update_list:
             neighbors = self.get_neighbor_count_list(cell[0], cell[1])

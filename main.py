@@ -15,7 +15,6 @@ by adding this in your settings.json file, inside of the curly brackets:
 
 This is the order of the functions this program uses to calculate the cells_list' next state:
     # setup
-        grid.create_cells_list() # makes a 2D array called cells_list, and fills it with Falses
         grid.set_starter_cells_list() # sets some of the cells_list to True, according to r_pentomino/glider
 
     # main while loop
@@ -27,9 +26,9 @@ This is the order of the functions this program uses to calculate the cells_list
         # this next function seems unnecessary in tests, but it makes sense to call it every frame
         # (re)makes an empty 1D array for storing the cells_list that have a neighbor count
         grid.create_neighbor_count_list()
-        grid.set_neighbor_count_list_list() # uses update_list to update the neighbor count array
+        grid.set_neighbor_count_list() # uses update_list to update the neighbor count array
 
-        grid.set_cells_state() # uses update_list to change the cell array
+        grid.change_cells_list_states() # uses update_list to change the cell array
 
         # drawing alive cells
 """
@@ -47,9 +46,9 @@ from grid import Grid
 def setup():
     """placeholder"""
     # CUSTOM VALUES
-    fullscreen_bool = False
+    fullscreen_bool = True
     update_interval = 0
-    draw_debug_info_bool = True
+    draw_debug_info_bool = False
     draw_neighbor_count_list_bool = False
     font_type = "arial"
     debug_font_size = 30
@@ -76,7 +75,6 @@ def setup():
     grid = Grid(cols, rows, cell_size, font_neighbor,
                 starter_cells_blueprint, screen)  # create the grid
 
-    grid.create_cells_list()
     grid.set_starter_cells_list()
 
     return (screen, grid, update_interval, draw_debug_info_bool,
@@ -97,6 +95,8 @@ def main():
 
     # grid.draw_updated_cells()
 
+    # this line is only here for draw_neighbor_count_list_bool in the draw_debug() after it
+    grid.create_update_list()
     draw_debug(draw_debug_info_bool, draw_neighbor_count_list_bool, first_start_time,
                update_interval, size, cols, rows, grid, font_debug, draw_cells_bool, screen)
 
@@ -115,13 +115,11 @@ def main():
         fill_screen(screen)
 
         grid.create_update_list()
-        grid.set_update_list()
 
         # this next function seems unnecessary in tests, but it makes sense to call it every frame
         grid.create_neighbor_count_list()
-        grid.set_neighbor_count_list_list()
 
-        grid.set_cells_state()
+        grid.change_cells_list_states()
 
         if draw_cells_bool:
             grid.draw_cells()
@@ -143,9 +141,9 @@ def fill_screen(screen):
 
 def draw_debug(draw_debug_info_bool, draw_neighbor_count_list_bool, start_time, update_interval,
                size, cols, rows, grid, font_debug, draw_cells_bool, screen):
-    """code that has to do with drawing stats that can help with debugging"""
+    """drawing stats that can help when debugging"""
     if draw_neighbor_count_list_bool:
-        grid.draw_neighbor_count_list_bool()
+        grid.draw_neighbor_count_list()
 
     if draw_debug_info_bool:
         text = []
