@@ -178,7 +178,7 @@ def draw_debug(draw_debug_info_bool, draw_neighbor_count_list_bool, start_time, 
             text.append("the program can run at " +
                         str(potential_speed_multiplier) + "x the current speed")
         else:
-            text.append("the program is running as fast as it can!")
+            text.append("the program is running as fast as it can")
 
         text.append("grid size: " +
                     str(grid.size[0]) + "x" + str(grid.size[1]))
