@@ -33,12 +33,7 @@ This is the order of the functions this program uses to calculate the cells_list
         # drawing alive cells
 """
 
-# import os
 import sys
-# import ctypes
-# user32 = ctypes.windll.user32
-# user32.SetProcessDPIAware()
-
 import time
 import math
 
@@ -53,7 +48,7 @@ def setup():
     # CUSTOM VALUES
     update_interval = 0
     starter_cells_blueprint = 1  # 1 = r_pentomino, 2 = glider
-    fullscreen_bool = True
+    fullscreen_bool = False
     draw_debug_info_bool = True
     draw_cells_bool = True
     draw_updated_cells_bool = False
@@ -61,9 +56,9 @@ def setup():
     font_type = "arial"
     debug_font_size = 30
 
-    cols = 50
-    rows = 50
-    cell_size = 20
+    cols = 500
+    rows = 500
+    cell_size = 2
 
     # INITIALIZATION
     pygame.init()
@@ -73,15 +68,22 @@ def setup():
     display_h = info_object.current_h
     size = (cols * cell_size, rows * cell_size)
 
-    grid_offset_x = (display_w - size[0]) / 2
-    grid_offset_y = (display_h - size[1]) / 2
-
     screen = pygame.display.set_mode(
-        (0, 0), pygame.FULLSCREEN if fullscreen_bool else 0)
+        size, pygame.FULLSCREEN if fullscreen_bool else 0)
     font_debug = pygame.freetype.SysFont(font_type, debug_font_size)
+
     font_neighbor = pygame.freetype.SysFont(font_type, cell_size)
     grid = Grid(cols, rows, cell_size, font_neighbor,
-                starter_cells_blueprint, grid_offset_x, grid_offset_y, screen)
+                starter_cells_blueprint, screen)
+
+    grid.offset_x_fullscreen = (display_w - size[0]) / 2
+    grid.offset_y_fullscreen = (display_h - size[1]) / 2
+    if fullscreen_bool:
+        grid.offset_x = grid.offset_x_fullscreen
+        grid.offset_y = grid.offset_y_fullscreen
+    else:
+        grid.offset_x = 0
+        grid.offset_y = 0
 
     grid.set_starter_cells_list()
 
@@ -104,11 +106,13 @@ def main():
     """placeholder"""
     first_start_time = time.time()
 
-    (screen, grid, update_interval, draw_debug_info_bool, draw_neighbor_count_list_bool,
-     size, font_debug, cols, rows, draw_cells_bool, draw_updated_cells_bool, display_w, display_h) = setup()
+    (screen, grid, update_interval, draw_debug_info_bool,
+     draw_neighbor_count_list_bool, size, font_debug, cols,
+     rows, draw_cells_bool, draw_updated_cells_bool, display_w, display_h) = setup()
 
-    draw_debug(draw_debug_info_bool, draw_neighbor_count_list_bool, first_start_time, update_interval,
-               size, cols, rows, grid, font_debug, draw_cells_bool, draw_updated_cells_bool, display_w, display_h, screen)
+    draw_debug(draw_debug_info_bool, draw_neighbor_count_list_bool,
+               first_start_time, update_interval, size, cols, rows, grid, font_debug,
+               draw_cells_bool, draw_updated_cells_bool, display_w, display_h, screen)
 
     pygame.display.flip()  # draw this frame
 
@@ -118,9 +122,10 @@ def main():
     while running_bool:
         start_time = time.time()
 
-        running_bool, draw_debug_info_bool, draw_cells_bool, draw_updated_cells_bool, draw_neighbor_count_list_bool = get_inputs(
-            screen, size, running_bool, draw_debug_info_bool,
-            draw_cells_bool, draw_updated_cells_bool, draw_neighbor_count_list_bool)
+        (running_bool, draw_debug_info_bool, draw_cells_bool,
+         draw_updated_cells_bool, draw_neighbor_count_list_bool) = get_inputs(
+             screen, size, display_w, display_h, grid, running_bool, draw_debug_info_bool,
+             draw_cells_bool, draw_updated_cells_bool, draw_neighbor_count_list_bool)
 
         fill_screen(screen, grid.offset_x, grid.offset_y, size)
 
@@ -212,7 +217,7 @@ def sleep(update_interval, start_time):
     time.sleep(sleep_time)
 
 
-def get_inputs(screen, size, running_bool, draw_debug_info_bool,
+def get_inputs(screen, size, display_w, display_h, grid, running_bool, draw_debug_info_bool,
                draw_cells_bool, draw_updated_cells_bool, draw_neighbor_count_list_bool):
     """placeholder"""
     for event in pygame.event.get():
@@ -228,8 +233,14 @@ def get_inputs(screen, size, running_bool, draw_debug_info_bool,
             # toggle fullscreen_bool
             if keys[pygame.K_f]:
                 if screen.get_flags() & pygame.FULLSCREEN:
-                    pygame.display.set_mode((0, 0))
+                    grid.offset_x = 0
+                    grid.offset_y = 0
+                    pygame.display.set_mode(size)
                 else:
+                    grid.offset_x = grid.offset_x_fullscreen
+                    grid.offset_y = grid.offset_y_fullscreen
+                    # we first resize the window to the size it'd be in fullscreen, then we fullscreen
+                    pygame.display.set_mode((display_w, display_h))
                     pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
             # what debug info to draw
             if keys[pygame.K_1]:

@@ -7,7 +7,7 @@ import pygame
 class Grid:
     """placeholder"""
 
-    def __init__(self, cols, rows, cell_size, font_neighbor, starter_cells_blueprint, offset_x, offset_y, screen):
+    def __init__(self, cols, rows, cell_size, font_neighbor, starter_cells_blueprint, screen):
         self.size = (cols, rows)
         self.cell_size = cell_size
         self.font_neighbor = font_neighbor
@@ -17,8 +17,8 @@ class Grid:
         self.neighbor_count_list = None
         self.update_list = None
         self.starter_cells_blueprint = starter_cells_blueprint
-        self.offset_x = offset_x
-        self.offset_y = offset_y
+        self.offset_x = 0
+        self.offset_y = 0
 
     def set_starter_cells_list(self):
         """adds some cells to cells_list, according to the r_pentomino/glider blueprints"""
