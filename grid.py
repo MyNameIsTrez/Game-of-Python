@@ -18,34 +18,32 @@ class Grid:
         self.starter_cells_blueprint = starter_cells_blueprint
 
     def create_cells_list(self):
-        """makes a 2D array called cells_list, and fills it with Falses"""
-        # create a 2D array filled with Falses, to hold the states of the cells_list in
-        self.cells_list = [
-            [False for row in range(self.size[1])] for col in range(self.size[0])
-        ]
+        """(re)makes an empty 1D array for storing the cols and rows of cells that are alive"""
+        self.cells_list = []
 
     def set_starter_cells_list(self):
-        """sets some of the cells_list to True, according to r_pentomino/glider"""
-        offset_x = math.floor(self.size[0] / 2)
-        offset_y = math.floor(self.size[1] / 2)
+        """sets some of the cells in cells_list to True, according to r_pentomino/glider"""
+        o_x = math.floor(self.size[0] / 2)  # offset_x
+        o_y = math.floor(self.size[1] / 2)  # offset_y
 
         if self.starter_cells_blueprint == 1:
             # r_pentomino
-            self.cells_list[0+offset_x][1+offset_y] = True
-            self.cells_list[1+offset_x][0+offset_y] = True
-            self.cells_list[1+offset_x][1+offset_y] = True
-            self.cells_list[1+offset_x][2+offset_y] = True
-            self.cells_list[2+offset_x][0+offset_y] = True
+            self.cells_list.append((0+o_x, 1+o_y))
+            self.cells_list.append((1+o_x, 0+o_y))
+            self.cells_list.append((1+o_x, 1+o_y))
+            self.cells_list.append((1+o_x, 2+o_y))
+            self.cells_list.append((2+o_x, 0+o_y))
         else:
-            # glider, useful for seeing if the cell states are being set incorrectly
-            self.cells_list[0+offset_x][1+offset_y] = True
-            self.cells_list[1+offset_x][2+offset_y] = True
-            self.cells_list[2+offset_x][2+offset_y] = True
-            self.cells_list[2+offset_x][1+offset_y] = True
-            self.cells_list[2+offset_x][0+offset_y] = True
+            # glider
+            # useful for checking if the cell states are being set incorrectly
+            self.cells_list.append((0+o_x, 1+o_y))
+            self.cells_list.append((1+o_x, 2+o_y))
+            self.cells_list.append((2+o_x, 2+o_y))
+            self.cells_list.append((2+o_x, 1+o_y))
+            self.cells_list.append((2+o_x, 0+o_y))
 
     def create_update_list(self):
-        """(re)makes an empty 1D array for storing the cells_list that are alive, and their neighbors"""
+        """(re)makes an empty 1D array for storing the cells in cell_list that are alive, with their neighbors"""
         self.update_list = []
 
     def set_update_list(self):
@@ -159,6 +157,14 @@ class Grid:
                          self.cell_size, self.cell_size),  # width, height
                         0  # thickness, 0 means fill instead
                     )
+        # for pos in self.cells_list:
+        #     pygame.draw.rect(
+        #         self.screen, (255, 255, 255),  # white
+        #         (pos[0] * self.cell_size,  # x
+        #          pos[1] * self.cell_size,  # y
+        #          self.cell_size, self.cell_size),  # width, height
+        #         0  # thickness, 0 means fill instead
+        #     )
 
     def draw_neighbor_count_list_bool(self):
         """placeholder"""
