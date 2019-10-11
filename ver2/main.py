@@ -55,9 +55,9 @@ def setup():
     draw_cells_bool = True
     starter_cells_blueprint = 1  # 1 = r_pentomino, 2 = glider
 
-    cols = 50
-    rows = 50
-    cell_size = 20
+    cols = 500
+    rows = 500
+    cell_size = 2
 
     # INITIALIZATION
     pygame.init()
