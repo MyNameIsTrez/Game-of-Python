@@ -60,6 +60,14 @@ def setup():
     rows = 500
     cell_size = 2
 
+    # a = ((3, 5, 7), (6, 2, 3), (3, 5, 7), (5, 4, 6), (5, 8, 9))
+    # col = 5
+    # row = 8
+    # for cell in a:
+    #     if (cell[0] == col):
+    #         if (cell[1] == row):
+    #             print(cell[2])
+
     # INITIALIZATION
     pygame.init()
 

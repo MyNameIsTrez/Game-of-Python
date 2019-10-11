@@ -93,18 +93,14 @@ class Grid:
             self.update_list.append((col+1, row+1))
 
     def create_neighbor_count_list(self):
-        # """(re)makes an empty 1D array for storing the cells_list that have a neighbor count"""
-        # self.neighbor_count_list = []
-        """(re)makes a 2D array with a neighbor count of 0 for each cell"""
-        self.neighbor_count_list = [
-            [0 for row in range(self.size[1])] for col in range(self.size[0])
-        ]
+        """(re)makes an empty 1D array for storing the cells_list that have a neighbor count"""
+        self.neighbor_count_list = []
 
     def set_neighbor_count_list_list(self):
         """uses update_list to update the neighbor count array"""
         for pos in self.update_list:
             neighbors = self.get_neighbor_count_list(pos[0], pos[1])
-            self.neighbor_count_list[pos[0]][pos[1]] = neighbors
+            self.neighbor_count_list.append((pos[0], pos[1], neighbors))
 
     def get_neighbor_count_list(self, col, row):
         """placeholder"""
@@ -144,16 +140,15 @@ class Grid:
 
     def set_cells_state(self):
         """uses update_list to change the cell array"""
-        for pos in self.update_list:
-            neighbors = self.neighbor_count_list[pos[0]][pos[1]]
+        for cell in self.neighbor_count_list:
+            neighbors = cell[2]
             if neighbors == 3:
-                self.cells_list[pos[0]][pos[1]] = True
+                self.cells_list[cell[0]][cell[1]] = True
             elif neighbors != 2:
-                self.cells_list[pos[0]][pos[1]] = False
+                self.cells_list[cell[0]][cell[1]] = False
 
     def draw_cells(self):
         """placeholder"""
-        # we have to use range(len()) to get the index
         for col in range(len(self.cells_list)):
             for row in range(len(self.cells_list[col])):
                 if self.cells_list[col][row]:
