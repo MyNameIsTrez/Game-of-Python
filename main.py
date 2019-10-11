@@ -34,9 +34,9 @@ from grid import Grid
 def setup():
     """placeholder"""
     # CUSTOM VALUES
-    cols = 500
-    rows = 500
-    cell_size = 2
+    cols = 100
+    rows = 100
+    cell_size = 10
 
     update_interval = 0
     starter_cells_blueprint = 1  # 1 = r_pentomino, 2 = glider
