@@ -40,6 +40,7 @@ def setup():
 
     update_interval = 0
     starter_cells_blueprint = 1  # 1 = r_pentomino, 2 = glider
+    random_starter_cells = False  # WARNING: VERY LAGGY
     fullscreen_bool = True
     draw_debug_info_bool = True
     draw_cells_bool = True
@@ -64,7 +65,7 @@ def setup():
 
     font_neighbor = pygame.freetype.SysFont(font_type, cell_size)
     grid = Grid(cols, rows, cell_size, font_neighbor,
-                starter_cells_blueprint, screen)
+                starter_cells_blueprint, random_starter_cells, screen)
 
     grid.offset_x_fullscreen = (display_w - size[0]) / 2
     grid.offset_y_fullscreen = (display_h - size[1]) / 2
@@ -73,10 +74,10 @@ def setup():
 
     grid.set_starter_cells_list()
 
-    fill_screen(screen, grid.offset_x, grid.offset_y, size)
-
     grid.create_update_list()
     grid.create_neighbor_count_list()
+
+    fill_screen(screen, grid.offset_x, grid.offset_y, size)
 
     if draw_cells_bool:
         grid.draw_cells()

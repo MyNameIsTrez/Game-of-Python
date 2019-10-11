@@ -1,5 +1,6 @@
 """placeholder"""
 import math
+import random
 
 import pygame
 
@@ -7,7 +8,7 @@ import pygame
 class Grid:
     """placeholder"""
 
-    def __init__(self, cols, rows, cell_size, font_neighbor, starter_cells_blueprint, screen):
+    def __init__(self, cols, rows, cell_size, font_neighbor, starter_cells_blueprint, random_starter_cells, screen):
         self.size = (cols, rows)
         self.cell_size = cell_size
         self.font_neighbor = font_neighbor
@@ -20,27 +21,34 @@ class Grid:
         self.offset_x = 0
         self.offset_y = 0
         self.total_cell_count = cols * rows
+        self.random_starter_cells = random_starter_cells
 
     def set_starter_cells_list(self):
         """adds some cells to cells_list, according to the r_pentomino/glider blueprints"""
         o_x = math.floor(self.size[0] / 2)  # offset_x
         o_y = math.floor(self.size[1] / 2)  # offset_y
 
-        if self.starter_cells_blueprint == 1:
-            # r_pentomino
-            self.cells_list.append((0+o_x, 1+o_y))
-            self.cells_list.append((1+o_x, 0+o_y))
-            self.cells_list.append((1+o_x, 1+o_y))
-            self.cells_list.append((1+o_x, 2+o_y))
-            self.cells_list.append((2+o_x, 0+o_y))
+        if self.random_starter_cells:
+            for col in range(self.size[0]):
+                for row in range(self.size[1]):
+                    if random.randint(0, 1):
+                        self.cells_list.append((col, row))
         else:
-            # glider
-            # useful for checking if the cell states are being set incorrectly
-            self.cells_list.append((0+o_x, 1+o_y))
-            self.cells_list.append((1+o_x, 2+o_y))
-            self.cells_list.append((2+o_x, 2+o_y))
-            self.cells_list.append((2+o_x, 1+o_y))
-            self.cells_list.append((2+o_x, 0+o_y))
+            if self.starter_cells_blueprint == 1:
+                # r_pentomino
+                self.cells_list.append((0+o_x, 1+o_y))
+                self.cells_list.append((1+o_x, 0+o_y))
+                self.cells_list.append((1+o_x, 1+o_y))
+                self.cells_list.append((1+o_x, 2+o_y))
+                self.cells_list.append((2+o_x, 0+o_y))
+            else:
+                # glider
+                # useful for checking if the cell states are being set incorrectly
+                self.cells_list.append((0+o_x, 1+o_y))
+                self.cells_list.append((1+o_x, 2+o_y))
+                self.cells_list.append((2+o_x, 2+o_y))
+                self.cells_list.append((2+o_x, 1+o_y))
+                self.cells_list.append((2+o_x, 0+o_y))
 
     def create_update_list(self):
         """placeholder"""
