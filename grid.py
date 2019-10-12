@@ -139,10 +139,8 @@ class Grid:
         return neighbors
 
     def cell_inside_cells_list(self, col, row):
-        """returns True if the cell is inside cells_list"""
-        for cell in self.cells_list:
-            if (cell[0] == col and cell[1] == row):
-                return True
+        if (col, row) in self.cells_list:
+            return True
         return False
 
     def change_cells_list_states(self):
