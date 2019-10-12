@@ -151,8 +151,11 @@ class Grid:
                 if not self.cell_inside_cells_list(cell[0], cell[1]):
                     self.cells_list.append((cell[0], cell[1]))
             elif neighbors != 2:
-                if self.cell_inside_cells_list(cell[0], cell[1]):
+                try:
                     self.cells_list.remove((cell[0], cell[1]))
+                except:
+                    continue
+
 
     def draw_cells(self):
         """placeholder"""
