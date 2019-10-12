@@ -86,7 +86,7 @@ def setup():
         grid.draw_updated_cells()
 
     return (screen, grid, update_interval, draw_debug_info_bool, draw_neighbor_count_list_bool,
-            size, font_debug, cols, rows, draw_cells_bool, draw_updated_cells_bool, display_w, display_h)
+            size, font_debug, draw_cells_bool, draw_updated_cells_bool, display_w, display_h)
 
 
 def main():
@@ -94,11 +94,11 @@ def main():
     first_start_time = time.time()
 
     (screen, grid, update_interval, draw_debug_info_bool,
-     draw_neighbor_count_list_bool, size, font_debug, cols,
-     rows, draw_cells_bool, draw_updated_cells_bool, display_w, display_h) = setup()
+     draw_neighbor_count_list_bool, size, font_debug,
+     draw_cells_bool, draw_updated_cells_bool, display_w, display_h) = setup()
 
     draw_debug(draw_debug_info_bool, draw_neighbor_count_list_bool,
-               first_start_time, update_interval, size, cols, rows, grid, font_debug,
+               first_start_time, update_interval, size, grid, font_debug,
                draw_cells_bool, draw_updated_cells_bool, display_w, display_h, screen)
 
     pygame.display.flip()  # draw this frame
@@ -129,7 +129,7 @@ def main():
             grid.draw_updated_cells()
 
         draw_debug(draw_debug_info_bool, draw_neighbor_count_list_bool, start_time, update_interval,
-                   size, cols, rows, grid, font_debug, draw_cells_bool, draw_updated_cells_bool, display_w, display_h, screen)
+                   size, grid, font_debug, draw_cells_bool, draw_updated_cells_bool, display_w, display_h, screen)
 
         pygame.display.flip()  # draw this frame
 
@@ -148,7 +148,7 @@ def fill_screen(screen, offset_x, offset_y, size):
 
 
 def draw_debug(draw_debug_info_bool, draw_neighbor_count_list_bool, start_time, update_interval,
-               size, cols, rows, grid, font_debug, draw_cells_bool, draw_updated_cells_bool, display_w, display_h, screen):
+               size, grid, font_debug, draw_cells_bool, draw_updated_cells_bool, display_w, display_h, screen):
     """drawing stats that can help when debugging"""
     if draw_neighbor_count_list_bool:
         grid.draw_neighbor_count_list()
