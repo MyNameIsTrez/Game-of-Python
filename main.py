@@ -21,7 +21,6 @@ by adding this in your settings.json file, inside of the curly brackets:
     ]
 """
 
-import sys
 import time
 import math
 
