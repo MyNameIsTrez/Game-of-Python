@@ -112,7 +112,7 @@ class Grid:
         neighbors = 0
 
         # top-left
-        if (not top_edge and not left_edge):
+        if not top_edge and not left_edge:
             neighbors += self.cell_inside_cells_list(col-1, row-1)
         # top
         if not top_edge:
@@ -133,7 +133,7 @@ class Grid:
         if not bottom_edge:
             neighbors += self.cell_inside_cells_list(col, row+1)
         # bottom-right
-        if (not bottom_edge and not right_edge):
+        if not bottom_edge and not right_edge:
             neighbors += self.cell_inside_cells_list(col+1, row+1)
 
         return neighbors
