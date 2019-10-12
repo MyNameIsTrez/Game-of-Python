@@ -14,7 +14,7 @@ Rules of Game of Life:
     - If a cell has 2 alive neighbors, it stays alive.
     - If a cell has any other number of neighbors, it dies of under-/overpopulation.
 
-You can temporarily get rid of most of the pylint alerts in the IDE
+You can temporarily get rid of most of the pylint alerts in the Visual Studio Code editor
 by adding this in your settings.json file, inside of the curly brackets:
     "python.linting.pylintArgs": [
         "--extension-pkg-whitelist=pygame"  // The extension is "lxml" not "1xml"
