@@ -41,7 +41,7 @@ def setup():
     update_interval = 0
     starter_cells_blueprint = 1  # 1 = r_pentomino, 2 = glider
     random_starter_cells = False  # WARNING: VERY LAGGY
-    fullscreen_bool = True
+    fullscreen_bool = False
     draw_debug_info_bool = True
     draw_cells_bool = True
     draw_updated_cells_bool = False
@@ -217,9 +217,8 @@ def get_inputs(screen, size, display_w, display_h, grid, running_bool, draw_debu
     """placeholder"""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            sys.exit()
-
-        if event.type == pygame.KEYDOWN:
+            running_bool = False  # sets running_bool to False to exit the while loop
+        elif event.type == pygame.KEYDOWN:
             # needed to register multiple keys being held down at once
             keys = pygame.key.get_pressed()
             # exit the program

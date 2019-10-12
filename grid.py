@@ -8,7 +8,8 @@ import pygame
 class Grid:
     """placeholder"""
 
-    def __init__(self, cols, rows, cell_size, font_neighbor, starter_cells_blueprint, random_starter_cells, screen):
+    def __init__(self, cols, rows, cell_size, font_neighbor,
+                 starter_cells_blueprint, random_starter_cells, screen):
         self.size = (cols, rows)
         self.cell_size = cell_size
         self.font_neighbor = font_neighbor
