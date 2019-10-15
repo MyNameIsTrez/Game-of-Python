@@ -35,7 +35,7 @@ def setup():
     # CUSTOM VALUES
     cols = 100
     rows = 100
-    cell_size = 10
+    cell_size = 5
 
     update_interval = 0
     starter_cells_blueprint = 1  # 1 = r_pentomino, 2 = glider
@@ -46,7 +46,6 @@ def setup():
     draw_updated_cells_bool = False
     draw_neighbor_count_list_bool = False
     font_type = "arial"
-    debug_font_size = 30
 
     # INITIALIZATION
     pygame.init()
@@ -58,8 +57,9 @@ def setup():
 
     if fullscreen_bool:
         pygame.display.set_mode((display_w, display_h))
-    screen = pygame.display.set_mode(
-        (0, 0) if fullscreen_bool else size, pygame.FULLSCREEN if fullscreen_bool else 0)
+    screen = pygame.display.set_mode((0, 0) if fullscreen_bool else size,
+                                     pygame.FULLSCREEN if fullscreen_bool else 0)
+    debug_font_size = cell_size * 3
     font_debug = pygame.freetype.SysFont(font_type, debug_font_size)
 
     font_neighbor = pygame.freetype.SysFont(font_type, cell_size)
@@ -200,7 +200,7 @@ def draw_debug(draw_debug_info_bool, draw_neighbor_count_list_bool, start_time, 
                     str(display_w) + "x" + str(display_h))
 
         for i, val in enumerate(text):
-            pos = (25, 25 + 40 * i)
+            pos = (2 * grid.cell_size, 2 * grid.cell_size + 4 * grid.cell_size * i)
             font_debug.render_to(screen, pos, val, (150, 150, 255))
 
 
