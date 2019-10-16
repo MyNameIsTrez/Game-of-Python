@@ -1,7 +1,7 @@
 """placeholder"""
 import math
 import random
-# from multiprocessing import Pool
+from multiprocessing import Pool
 
 import pygame
 
@@ -63,12 +63,12 @@ class Grid:
             self.set_self_and_neighbors_to_update_list(cell)
 
         # utilizing multiprocessing
-        #p = Pool(5)
+        # p = Pool(1)
         #print(p.map(self.f, [1, 2, 3]))
-        #p.map(self.set_self_and_neighbors_to_update_list, self.cells_list)
+        # p.map(self.set_self_and_neighbors_to_update_list, self.cells_list)
 
         # removes all duplicate entries
-        #self.update_list = list(set(self.update_list))
+        self.update_list = list(set(self.update_list))
 
     def set_self_and_neighbors_to_update_list(self, cell):
         """placeholder"""

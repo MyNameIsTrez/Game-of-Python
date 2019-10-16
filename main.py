@@ -29,7 +29,7 @@ import pygame
 
 from grid import Grid
 
-from multiprocessing import Pool
+# from multiprocessing import Pool
 
 def setup():
     """placeholder"""
@@ -252,11 +252,11 @@ def f(x):
     return x*x
 
 if __name__ == '__main__':
-    print('1')
-    time.sleep(5)
-    p = Pool(5)
-    print('2')
-    time.sleep(5)
-    print(p.map(f, [1, 2, 3]))
+    # print('1')
+    # time.sleep(5)
+    # p = Pool(5)
+    # print('2')
+    # time.sleep(5)
+    # print(p.map(f, [1, 2, 3]))
 
     main()
