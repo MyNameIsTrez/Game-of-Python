@@ -1,7 +1,7 @@
 """placeholder"""
 import math
 import random
-from multiprocessing import Pool
+# from multiprocessing import Pool
 
 import pygame
 
@@ -58,6 +58,9 @@ class Grid:
     def create_update_list(self):
         """placeholder"""
         self.update_list = []
+
+        for cell in self.cells_list:
+            self.set_self_and_neighbors_to_update_list(cell)
 
         # utilizing multiprocessing
         #p = Pool(5)
