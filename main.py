@@ -24,11 +24,19 @@ by adding this in your settings.json file, inside of the curly brackets:
 import time
 import math
 
+from multiprocessing import Pool
+
 import pygame.freetype
 import pygame
 
 from grid import Grid
 
+def f(x):
+    return x*x
+    
+if __name__ == '__main__':
+    p = Pool(5)
+    print(p.map(f, [1, 2, 3]))
 
 def setup():
     """placeholder"""

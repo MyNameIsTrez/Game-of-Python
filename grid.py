@@ -1,6 +1,7 @@
 """placeholder"""
 import math
 import random
+from multiprocessing import Pool
 
 import pygame
 
@@ -51,20 +52,30 @@ class Grid:
                 self.cells_list.append((2+o_x, 1+o_y))
                 self.cells_list.append((2+o_x, 0+o_y))
 
+    #def f(x):
+    #    return x*x
+
     def create_update_list(self):
         """placeholder"""
         self.update_list = []
 
-        for cell in self.cells_list:
-            # adds itself to update_list
-            self.update_list.append((cell[0], cell[1]))
-            # adds its neighbors to update_list
-            self.set_neighbors_to_update_list(cell[0], cell[1])
-        # removes all duplicate entries
-        self.update_list = list(set(self.update_list))
+        # utilizing multiprocessing
+        #p = Pool(5)
+        #print(p.map(self.f, [1, 2, 3]))
+        #p.map(self.set_self_and_neighbors_to_update_list, self.cells_list)
 
-    def set_neighbors_to_update_list(self, col, row):
+        # removes all duplicate entries
+        #self.update_list = list(set(self.update_list))
+
+    def set_self_and_neighbors_to_update_list(self, cell):
         """placeholder"""
+        col = cell[0]
+        row = cell[1]
+
+        # adds itself to update_list
+        self.update_list.append((cell[0], cell[1]))
+
+        # adds neighbors to update_list
         top_edge = row == 0
         bottom_edge = row == self.size[1] - 1
         left_edge = col == 0
