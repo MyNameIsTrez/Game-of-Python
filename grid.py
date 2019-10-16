@@ -52,19 +52,23 @@ class Grid:
                 self.cells_list.append((2+o_x, 1+o_y))
                 self.cells_list.append((2+o_x, 0+o_y))
 
-    #def f(x):
-    #    return x*x
+    def f(self, x):
+        return x*x
 
     def create_update_list(self):
         """placeholder"""
         self.update_list = []
 
+        # not utilizing multiprocessing
         for cell in self.cells_list:
             self.set_self_and_neighbors_to_update_list(cell)
 
         # utilizing multiprocessing
-        # p = Pool(1)
-        #print(p.map(self.f, [1, 2, 3]))
+        p = Pool(5)
+        print(p.map(
+            self.f,
+            [1, 2, 3]
+        ))
         # p.map(self.set_self_and_neighbors_to_update_list, self.cells_list)
 
         # removes all duplicate entries
