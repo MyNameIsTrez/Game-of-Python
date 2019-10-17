@@ -247,16 +247,5 @@ def get_inputs(screen, size, display_w, display_h, grid, running_bool, draw_debu
                 draw_neighbor_count_list_bool = not draw_neighbor_count_list_bool
     return running_bool, draw_debug_info_bool, draw_cells_bool, draw_updated_cells_bool, draw_neighbor_count_list_bool
 
-
-def f(x):
-    return x*x
-
 if __name__ == '__main__':
-    # print('1')
-    # time.sleep(5)
-    # p = Pool(5)
-    # print('2')
-    # time.sleep(5)
-    # print(p.map(f, [1, 2, 3]))
-
     main()
