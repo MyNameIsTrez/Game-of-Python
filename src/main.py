@@ -21,38 +21,50 @@ by adding this in your settings.json file, inside of the curly brackets:
 	]
 """
 
+import os
 import time
 import math
+import sys
 
 import pygame.freetype
 import pygame
+
+from configparser import ConfigParser
 
 from grid import Grid
 from graph import Graph
 from artist import Artist
 from debug_info import Debug_Info
+from event_handler import Event_Handler
 
 # from multiprocessing import Pool
 
 
 def setup():
-	# CUSTOM VALUES
-	cols = 50
-	rows = 50
-	cell_size = 10
+	# get the user's config settings from config.ini
+	config = ConfigParser()
+	# config.read("config.ini")
+	config.read(os.path.join(sys.path[0], "config.ini"))
+	# print(config["CUSTOM VARIABLES"]["rows"])
+	cfg = config["CUSTOM VARIABLES"]
 
-	update_interval = 0.1
-	starter_cells_blueprint = 1  # 1 = r_pentomino, 2 = glider
-	random_starter_cells = False  # WARNING: VERY LAGGY
-	fullscreen_bool = False
-	draw_debug_info_bool = True
-	draw_cells_bool = True
-	draw_updated_cells_bool = False
-	draw_neighbor_count_list_bool = False
-	font_type = "arial"
-	neighbor_count_color = (255, 0, 0)
+	cols = int(cfg["cols"])
+	rows = int(cfg["rows"])
+	cell_size = int(cfg["cell_size"])
 
-	# INITIALIZATION
+	update_interval = float(cfg["update_interval"])
+	starter_cells_blueprint = int(cfg["starter_cells_blueprint"])
+	random_starter_cells = cfg.getboolean("random_starter_cells")
+	fullscreen_bool = cfg.getboolean("fullscreen_bool")
+	draw_debug_info_bool = cfg.getboolean("draw_debug_info_bool")
+	draw_cells_bool = cfg.getboolean("draw_cells_bool")
+	draw_updated_cells_bool = cfg.getboolean("draw_updated_cells_bool")
+	draw_neighbor_count_list_bool = cfg.getboolean(
+		"draw_neighbor_count_list_bool")
+	font_type = cfg["font_type"]
+	neighbor_count_color = eval(cfg["neighbor_count_color"])
+
+	# initialization
 	pygame.init()
 
 	info_object = pygame.display.Info()
@@ -62,8 +74,19 @@ def setup():
 
 	if fullscreen_bool:
 		pygame.display.set_mode((display_w, display_h))
-	screen = pygame.display.set_mode((0, 0) if fullscreen_bool else size,
-                                  pygame.FULLSCREEN if fullscreen_bool else 0)
+
+	print(fullscreen_bool)
+
+	screen = pygame.display.set_mode(
+		(0, 0) if fullscreen_bool
+		else
+		size,
+		pygame.FULLSCREEN
+		if
+		fullscreen_bool
+		else
+		0
+	)
 
 	debug_font_size = cell_size * 3
 	font_debug = pygame.freetype.SysFont(font_type, debug_font_size)
@@ -96,16 +119,19 @@ def setup():
 		grid, update_interval, size, display_w, display_h, artist, graph
 	)
 
-	return (screen, grid, update_interval, draw_debug_info_bool, draw_neighbor_count_list_bool,
-         size, draw_cells_bool, draw_updated_cells_bool, display_w, display_h, graph, artist, debug_info)
+	event_handler = Event_Handler()
+
+	return (screen, grid, update_interval, draw_debug_info_bool,
+         draw_neighbor_count_list_bool, size, draw_cells_bool, draw_updated_cells_bool,
+         display_w, display_h, graph, artist, debug_info, event_handler)
 
 
 def main():
 	first_start_time = time.time()
 
 	(screen, grid, update_interval, draw_debug_info_bool,
-	 draw_neighbor_count_list_bool, size, draw_cells_bool,
-	 draw_updated_cells_bool, display_w, display_h, graph, artist, debug_info) = setup()
+	 draw_neighbor_count_list_bool, size, draw_cells_bool, draw_updated_cells_bool,
+	 display_w, display_h, graph, artist, debug_info, event_handler) = setup()
 
 	debug_info.draw(first_start_time)
 
@@ -115,8 +141,8 @@ def main():
 
 	debug_info.state = "simulating"
 	while debug_info.running_bool:
-		get_inputs(screen, size, display_w, display_h,
-		           grid, graph, artist, debug_info)
+		event_handler.handle(screen, size, display_w, display_h,
+                       grid, graph, artist, debug_info)
 
 		if debug_info.state == "simulating":
 			start_time = time.time()
@@ -149,47 +175,6 @@ def sleep(update_interval, start_time):
 	final_time_elapsed = time.time() - start_time
 	sleep_time = max(update_interval - final_time_elapsed, 0)
 	time.sleep(sleep_time)
-
-
-def get_inputs(screen, size, display_w, display_h, grid, graph, artist, debug_info):
-	for event in pygame.event.get():
-		if event.type == pygame.QUIT:
-			debug_info.running_bool = False  # sets running_bool to False to exit the while loop
-		elif event.type == pygame.KEYDOWN:
-			# needed to register multiple keys being held down at once
-			keys = pygame.key.get_pressed()
-
-			# exit the program
-			if keys[pygame.K_ESCAPE]:
-				debug_info.running_bool = False  # sets running_bool to False to exit the while loop
-
-			# toggle fullscreen_bool
-			if keys[pygame.K_f]:
-				if screen.get_flags() & pygame.FULLSCREEN:
-					artist.offset = (0, 0)
-
-					pygame.display.set_mode(size)
-				else:
-					artist.offset = artist.offset_fullscreen
-
-					# we first resize the window to the size it'd be in fullscreen, then we fullscreen
-					pygame.display.set_mode((display_w, display_h))
-					pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-
-			# what debug info to draw
-			if keys[pygame.K_1]:
-				debug_info.draw_debug_info_bool = not debug_info.draw_debug_info_bool
-			if keys[pygame.K_2]:
-				debug_info.draw_cells_bool = not debug_info.draw_cells_bool
-			if keys[pygame.K_3]:
-				debug_info.draw_updated_cells_bool = not debug_info.draw_updated_cells_bool
-			if keys[pygame.K_4]:
-				debug_info.draw_neighbor_count_list_bool = not debug_info.draw_neighbor_count_list_bool
-			if keys[pygame.K_5]:
-				if debug_info.state == "simulating":
-					debug_info.state = "showing graph"
-				elif debug_info.state == "showing graph":
-					debug_info.state = "simulating"
 
 
 if __name__ == '__main__':
