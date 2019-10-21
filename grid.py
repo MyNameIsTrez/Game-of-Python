@@ -210,8 +210,8 @@ class Grid:
 	def draw_cells(self):
 		for cell in self.cells_list:
 			color = (255, 255, 255)
-			x = self.offset[0] + cell[0] * self.cell_size
-			y = self.offset[1] + cell[1] * self.cell_size
+			x = self.artist.offset[0] + cell[0] * self.cell_size
+			y = self.artist.offset[1] + cell[1] * self.cell_size
 			width = self.cell_size
 			height = self.cell_size
 			thickness = 0
@@ -220,8 +220,8 @@ class Grid:
 
 	def draw_neighbor_count_list(self):
 		for cell in self.neighbor_count_list:
-			x = self.offset[0] + cell[0] * self.cell_size + 0.5 * self.cell_size
-			y = self.offset[1] + cell[1] * self.cell_size + 0.5 * self.cell_size
+			x = self.artist.offset[0] + cell[0] * self.cell_size + 0.5 * self.cell_size
+			y = self.artist.offset[1] + cell[1] * self.cell_size + 0.5 * self.cell_size
 			neighbors = cell[2]
 			text = str(neighbors)
 			color = self.neighbor_count_color
@@ -231,8 +231,8 @@ class Grid:
 	def draw_updated_cells(self):
 		for cell in self.update_list:
 			color = (255, 0, 0)
-			x = self.offset[0] + cell[0] * self.cell_size
-			y = self.offset[1] + cell[1] * self.cell_size
+			x = self.artist.offset[0] + cell[0] * self.cell_size
+			y = self.artist.offset[1] + cell[1] * self.cell_size
 			width = self.cell_size
 			height = self.cell_size
 			thickness = 0

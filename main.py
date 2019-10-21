@@ -43,7 +43,7 @@ def setup():
 	update_interval = 0.1
 	starter_cells_blueprint = 1  # 1 = r_pentomino, 2 = glider
 	random_starter_cells = False  # WARNING: VERY LAGGY
-	fullscreen_bool = True
+	fullscreen_bool = False
 	draw_debug_info_bool = True
 	draw_cells_bool = True
 	draw_updated_cells_bool = False
@@ -71,14 +71,10 @@ def setup():
 
 	artist.offset_fullscreen = (
             (display_w - size[0]) / 2, (display_h - size[1]) / 2)
-	artist.offset = artist.offset_fullscreen if fullscreen_bool else 0
+	artist.offset = artist.offset_fullscreen if fullscreen_bool else (0, 0)
 
 	grid = Grid(cols, rows, cell_size, neighbor_count_color,
              starter_cells_blueprint, random_starter_cells, artist, screen)
-
-	grid.offset_fullscreen = (
-		(display_w - size[0]) / 2, (display_h - size[1]) / 2)
-	grid.offset = grid.offset_fullscreen if fullscreen_bool else 0
 
 	grid.set_starter_cells_list()
 
@@ -94,9 +90,6 @@ def setup():
 		grid.draw_updated_cells()
 
 	graph = Graph(screen, width, height, artist)
-	graph.offset_fullscreen = (
-		(display_w - size[0]) / 2, (display_h - size[1]) / 2)
-	graph.offset = graph.offset_fullscreen if fullscreen_bool else 0
 
 	return (screen, grid, update_interval, draw_debug_info_bool, draw_neighbor_count_list_bool,
          size, draw_cells_bool, draw_updated_cells_bool, display_w, display_h, graph, artist)
@@ -276,14 +269,10 @@ def get_inputs(screen, size, display_w, display_h, grid, running_bool, draw_debu
 			if keys[pygame.K_f]:
 				if screen.get_flags() & pygame.FULLSCREEN:
 					artist.offset = (0, 0)
-					grid.offset = (0, 0)
-					graph.offset = (0, 0)
 
 					pygame.display.set_mode(size)
 				else:
 					artist.offset = artist.offset_fullscreen
-					grid.offset = grid.offset_fullscreen
-					graph.offset = graph.offset_fullscreen
 
 					# we first resize the window to the size it'd be in fullscreen, then we fullscreen
 					pygame.display.set_mode((display_w, display_h))

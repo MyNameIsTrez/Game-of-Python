@@ -12,6 +12,12 @@ class Artist:
 		self.font_color = (255, 50, 50)
 		self.outer_background_color = ((25, 25, 25))
 		self.inner_background_color = (50, 50, 50)
+		self.offset = None  # this is just for documentation purposes
+
+	def rect(self, color, x, y, width, height, thickness):
+		pygame.draw.rect(
+			self.screen, color, (x, y, width, height), thickness
+		)
 
 	def fill_screen(self):
 		# draw the outer background color
@@ -26,11 +32,6 @@ class Artist:
 		thickness = 0  # 0 means fill
 
 		self.rect(color, x, y, width, height, thickness)
-
-	def rect(self, color, x, y, width, height, thickness):
-		pygame.draw.rect(
-			self.screen, color, (x, y, width, height), thickness
-		)
 
 	def text(self, x, y, text, color, font):
 		if font == "neighbor":
