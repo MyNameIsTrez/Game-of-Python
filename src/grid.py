@@ -6,8 +6,6 @@ import time
 # from multiprocessing import Pool
 # from functools import partial
 
-import pygame
-
 
 # def set_self_and_neighbors_to_update_list(grid, cell):
 #     col = cell[0]

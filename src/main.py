@@ -30,6 +30,7 @@ import pygame
 from grid import Grid
 from graph import Graph
 from artist import Artist
+from debug_info import Debug_Info
 
 # from multiprocessing import Pool
 
@@ -90,9 +91,13 @@ def setup():
 		grid.draw_updated_cells()
 
 	graph = Graph(screen, width, height, artist)
+	debug_info = Debug_Info(
+		draw_debug_info_bool, draw_cells_bool, draw_updated_cells_bool, draw_neighbor_count_list_bool,
+		grid, update_interval, size, display_w, display_h, artist, graph
+	)
 
 	return (screen, grid, update_interval, draw_debug_info_bool, draw_neighbor_count_list_bool,
-         size, draw_cells_bool, draw_updated_cells_bool, display_w, display_h, graph, artist)
+         size, draw_cells_bool, draw_updated_cells_bool, display_w, display_h, graph, artist, debug_info)
 
 
 def main():
@@ -100,28 +105,20 @@ def main():
 
 	(screen, grid, update_interval, draw_debug_info_bool,
 	 draw_neighbor_count_list_bool, size, draw_cells_bool,
-	 draw_updated_cells_bool, display_w, display_h, graph, artist) = setup()
+	 draw_updated_cells_bool, display_w, display_h, graph, artist, debug_info) = setup()
 
-	draw_debug(draw_debug_info_bool, draw_neighbor_count_list_bool,
-            first_start_time, update_interval, size, grid, draw_cells_bool,
-            draw_updated_cells_bool, display_w, display_h, graph, artist, screen)
+	debug_info.draw(first_start_time)
 
 	pygame.display.flip()  # draw this frame
 
 	sleep(update_interval, first_start_time)
 
-	running_bool = True
-	state = "simulating"
-	while running_bool:
-		(
-			running_bool, draw_debug_info_bool, draw_cells_bool,
-			draw_updated_cells_bool, draw_neighbor_count_list_bool, state
-		) = get_inputs(
-			screen, size, display_w, display_h, grid, running_bool, draw_debug_info_bool,
-			draw_cells_bool, draw_updated_cells_bool, draw_neighbor_count_list_bool, state, graph, artist
-		)
+	debug_info.state = "simulating"
+	while debug_info.running_bool:
+		get_inputs(screen, size, display_w, display_h,
+		           grid, graph, artist, debug_info)
 
-		if state == "simulating":
+		if debug_info.state == "simulating":
 			start_time = time.time()
 
 			artist.fill_screen()
@@ -133,117 +130,19 @@ def main():
 
 			grid.change_cells_list_states()
 
-			if draw_cells_bool:
+			if debug_info.draw_cells_bool:
 				grid.draw_cells()
-			if draw_updated_cells_bool:
+			if debug_info.draw_updated_cells_bool:
 				grid.draw_updated_cells()
 
-			draw_debug(draw_debug_info_bool, draw_neighbor_count_list_bool, start_time, update_interval,
-                            size, grid, draw_cells_bool, draw_updated_cells_bool, display_w, display_h, graph, artist, screen)
+			debug_info.draw(start_time)
 
 			pygame.display.flip()  # draw this frame
 
 			sleep(update_interval, start_time)
-		elif state == "showing graph":
+		elif debug_info.state == "showing graph":
 			graph.draw()
 			pygame.display.flip()  # draw this frame
-
-
-def draw_debug(draw_debug_info_bool, draw_neighbor_count_list_bool, start_time, update_interval,
-               size, grid, draw_cells_bool, draw_updated_cells_bool, display_w, display_h, graph, artist, screen):
-	# drawing stats that can help when debugging
-	if draw_neighbor_count_list_bool:
-		grid.draw_neighbor_count_list()
-
-	if draw_debug_info_bool:
-		data = {}
-		text = []
-
-		partial_time_elapsed = time.time() - start_time
-		ms = math.ceil(partial_time_elapsed * 1000)
-		data["ms/frame"] = ms
-		ms_interval = math.ceil(update_interval * 1000)
-
-		# fps
-		if partial_time_elapsed > 0:
-			fps = math.ceil(1 / partial_time_elapsed)
-		else:
-			fps = None
-
-		if (fps):
-			string = str(fps) + " fps"
-		else:
-			string = "None fps"
-		text.append(string)
-		data["fps"] = fps
-
-		# ms/frame
-		string = str(ms)
-		if update_interval != 0:
-			string += "/" + str(ms_interval)
-		string += " ms/frame"
-		text.append(string)
-
-		# ms/cell alive
-		ms_per_cell_alive = round(ms / len(grid.cells_list), 2)
-		string = str(ms_per_cell_alive) + " ms/cell alive"
-		text.append(string)
-		data["ms/cell alive"] = ms_per_cell_alive
-
-		# ms/cell updated
-		ms_per_cell_updated = round(ms / len(grid.update_list), 2)
-		string = str(ms_per_cell_updated) + " ms/cell updated"
-		text.append(string)
-		data["ms/cell updated"] = ms_per_cell_updated
-
-		# potential_speed_multiplier
-		if partial_time_elapsed > 0 and update_interval != 0:
-			potential_speed_multiplier = round(
-				update_interval / partial_time_elapsed, 1)
-		else:
-			potential_speed_multiplier = None
-
-		if update_interval != 0:
-			text.append("the program can run at " +
-                            str(potential_speed_multiplier) + "x the current speed")
-		else:
-			text.append("the program is running as fast as it can")
-		data["potential speed multiplier"] = potential_speed_multiplier
-
-		text.append("grid size: " +
-                    str(grid.size[0]) + "x" + str(grid.size[1]))
-		text.append("total cell count: " + str(grid.total_cell_count))
-
-		cells_dead = grid.total_cell_count - len(grid.cells_list)
-		text.append("cells dead: " + str(cells_dead))
-		data["cells dead"] = cells_dead
-
-		cells_alive = len(grid.cells_list)
-		text.append("cells alive: " + str(cells_alive))
-		data["cells alive"] = cells_alive
-
-		cells_updated = len(grid.update_list)
-		text.append("cells updated: " + str(cells_updated))
-		data["cells updated"] = cells_updated
-
-		text.append("draw cells: " + str(draw_cells_bool))
-		text.append("draw updated cells: " + str(draw_updated_cells_bool))
-		text.append("draw neighbor count: " +
-                    str(draw_neighbor_count_list_bool))
-
-		text.append("cell size: " + str(grid.cell_size))
-		text.append("program resolution: " + str(size[0]) + "x" + str(size[1]))
-		text.append("display resolution: " +
-                    str(display_w) + "x" + str(display_h))
-
-		for i, text in enumerate(text):
-			x = 2 * grid.cell_size
-			y = 2 * grid.cell_size + 4 * grid.cell_size * i
-			color = (150, 150, 255)
-			font = 'debug'
-			artist.text(x, y, text, color, font)
-
-		graph.data.append(data)
 
 
 def sleep(update_interval, start_time):
@@ -252,18 +151,17 @@ def sleep(update_interval, start_time):
 	time.sleep(sleep_time)
 
 
-def get_inputs(screen, size, display_w, display_h, grid, running_bool, draw_debug_info_bool,
-               draw_cells_bool, draw_updated_cells_bool, draw_neighbor_count_list_bool, state, graph, artist):
+def get_inputs(screen, size, display_w, display_h, grid, graph, artist, debug_info):
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
-			running_bool = False  # sets running_bool to False to exit the while loop
+			debug_info.running_bool = False  # sets running_bool to False to exit the while loop
 		elif event.type == pygame.KEYDOWN:
 			# needed to register multiple keys being held down at once
 			keys = pygame.key.get_pressed()
 
 			# exit the program
 			if keys[pygame.K_ESCAPE]:
-				running_bool = False  # sets running_bool to False to exit the while loop
+				debug_info.running_bool = False  # sets running_bool to False to exit the while loop
 
 			# toggle fullscreen_bool
 			if keys[pygame.K_f]:
@@ -280,20 +178,18 @@ def get_inputs(screen, size, display_w, display_h, grid, running_bool, draw_debu
 
 			# what debug info to draw
 			if keys[pygame.K_1]:
-				draw_debug_info_bool = not draw_debug_info_bool
+				debug_info.draw_debug_info_bool = not debug_info.draw_debug_info_bool
 			if keys[pygame.K_2]:
-				draw_cells_bool = not draw_cells_bool
+				debug_info.draw_cells_bool = not debug_info.draw_cells_bool
 			if keys[pygame.K_3]:
-				draw_updated_cells_bool = not draw_updated_cells_bool
+				debug_info.draw_updated_cells_bool = not debug_info.draw_updated_cells_bool
 			if keys[pygame.K_4]:
-				draw_neighbor_count_list_bool = not draw_neighbor_count_list_bool
+				debug_info.draw_neighbor_count_list_bool = not debug_info.draw_neighbor_count_list_bool
 			if keys[pygame.K_5]:
-				if state == "simulating":
-					state = "showing graph"
-				elif state == "showing graph":
-					state = "simulating"
-
-	return running_bool, draw_debug_info_bool, draw_cells_bool, draw_updated_cells_bool, draw_neighbor_count_list_bool, state
+				if debug_info.state == "simulating":
+					debug_info.state = "showing graph"
+				elif debug_info.state == "showing graph":
+					debug_info.state = "simulating"
 
 
 if __name__ == '__main__':

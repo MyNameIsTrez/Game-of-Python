@@ -1,6 +1,3 @@
-import pygame
-
-
 class Graph:
 	def __init__(self, screen, width, height, artist):
 		self.screen = screen
