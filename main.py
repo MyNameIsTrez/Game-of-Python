@@ -33,7 +33,6 @@ from grid import Grid
 
 
 def setup():
-	"""placeholder"""
 	# CUSTOM VALUES
 	cols = 50
 	rows = 50
@@ -91,7 +90,6 @@ def setup():
 
 
 def main():
-	"""placeholder"""
 	first_start_time = time.time()
 
 	(screen, grid, update_interval, draw_debug_info_bool,
@@ -138,7 +136,6 @@ def main():
 
 
 def fill_screen(screen, offset_x, offset_y, size):
-	"""placeholder"""
 	screen.fill((25, 25, 25))  # make the entire screen dark gray
 	# draw a rectangle to fill the area of the grid
 	pygame.draw.rect(
@@ -150,7 +147,7 @@ def fill_screen(screen, offset_x, offset_y, size):
 
 def draw_debug(draw_debug_info_bool, draw_neighbor_count_list_bool, start_time, update_interval,
                size, grid, font_debug, draw_cells_bool, draw_updated_cells_bool, display_w, display_h, screen):
-	"""drawing stats that can help when debugging"""
+	# drawing stats that can help when debugging
 	if draw_neighbor_count_list_bool:
 		grid.draw_neighbor_count_list()
 
@@ -224,7 +221,6 @@ def draw_debug(draw_debug_info_bool, draw_neighbor_count_list_bool, start_time, 
 
 
 def sleep(update_interval, start_time):
-	"""placeholder"""
 	final_time_elapsed = time.time() - start_time
 	sleep_time = max(update_interval - final_time_elapsed, 0)
 	time.sleep(sleep_time)
@@ -232,7 +228,6 @@ def sleep(update_interval, start_time):
 
 def get_inputs(screen, size, display_w, display_h, grid, running_bool, draw_debug_info_bool,
                draw_cells_bool, draw_updated_cells_bool, draw_neighbor_count_list_bool):
-	"""placeholder"""
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			running_bool = False  # sets running_bool to False to exit the while loop

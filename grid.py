@@ -1,4 +1,4 @@
-"""placeholder"""
+
 import math
 import random
 import time
@@ -10,7 +10,6 @@ import pygame
 
 
 # def set_self_and_neighbors_to_update_list(grid, cell):
-#     """placeholder"""
 #     col = cell[0]
 #     row = cell[1]
 
@@ -50,7 +49,6 @@ import pygame
 
 
 class Grid:
-	"""placeholder"""
 
 	def __init__(self, cols, rows, cell_size, font_neighbor,
               starter_cells_blueprint, random_starter_cells, screen):
@@ -70,7 +68,7 @@ class Grid:
 		# self.pool = Pool()
 
 	def set_starter_cells_list(self):
-		"""adds some cells to cells_list, according to the r_pentomino/glider blueprints"""
+		# adds some cells to cells_list, according to the r_pentomino/glider blueprints
 		o_x = math.floor(self.size[0] / 2)  # offset_x
 		o_y = math.floor(self.size[1] / 2)  # offset_y
 
@@ -97,7 +95,6 @@ class Grid:
 				self.cells_list.append((2 + o_x, 0 + o_y))
 
 	def create_update_list(self):
-		"""placeholder"""
 		self.update_list = []
 
 		# utilizing multiprocessing
@@ -116,7 +113,6 @@ class Grid:
 		self.update_list = list(set(self.update_list))
 
 	def set_self_and_neighbors_to_update_list(self, cell):
-		"""placeholder"""
 		col = cell[0]
 		row = cell[1]
 
@@ -155,14 +151,12 @@ class Grid:
 			self.update_list.append((col + 1, row + 1))
 
 	def create_neighbor_count_list(self):
-		"""placeholder"""
 		self.neighbor_count_list = []
 		for cell in self.update_list:
 			neighbors = self.get_neighbor_count_list(cell[0], cell[1])
 			self.neighbor_count_list.append((cell[0], cell[1], neighbors))
 
 	def get_neighbor_count_list(self, col, row):
-		"""placeholder"""
 		top_edge = row == 0
 		bottom_edge = row == self.size[1] - 1
 		left_edge = col == 0
@@ -203,7 +197,6 @@ class Grid:
 		return False
 
 	def change_cells_list_states(self):
-		"""placeholder"""
 		for cell in self.neighbor_count_list:
 			neighbors = cell[2]
 			if neighbors == 3:
@@ -216,7 +209,6 @@ class Grid:
 					continue
 
 	def draw_cells(self):
-		"""placeholder"""
 		for cell in self.cells_list:
 			pygame.draw.rect(
 				self.screen, (255, 255, 255),  # white
@@ -227,7 +219,6 @@ class Grid:
 			)
 
 	def draw_neighbor_count_list(self):
-		"""placeholder"""
 		for cell in self.neighbor_count_list:
 			neighbors = cell[2]
 
@@ -237,7 +228,6 @@ class Grid:
 				self.screen, coords, str(neighbors), (255, 50, 50))
 
 	def draw_updated_cells(self):
-		"""placeholder"""
 		for cell in self.update_list:
 			pygame.draw.rect(
 				self.screen, (255, 0, 0),  # red
