@@ -49,6 +49,7 @@ def setup():
 	draw_updated_cells_bool = False
 	draw_neighbor_count_list_bool = False
 	font_type = "arial"
+	neighbor_count_color = (255, 0, 0)
 
 	# INITIALIZATION
 	pygame.init()
@@ -62,16 +63,17 @@ def setup():
 		pygame.display.set_mode((display_w, display_h))
 	screen = pygame.display.set_mode((0, 0) if fullscreen_bool else size,
                                   pygame.FULLSCREEN if fullscreen_bool else 0)
+
 	debug_font_size = cell_size * 3
 	font_debug = pygame.freetype.SysFont(font_type, debug_font_size)
+	font_neighbor = pygame.freetype.SysFont(font_type, cell_size)
+	artist = Artist(screen, width, height, font_neighbor, font_debug)
 
-	artist = Artist(screen, width, height)
 	artist.offset_fullscreen = (
             (display_w - size[0]) / 2, (display_h - size[1]) / 2)
 	artist.offset = artist.offset_fullscreen if fullscreen_bool else 0
 
-	font_neighbor = pygame.freetype.SysFont(font_type, cell_size)
-	grid = Grid(cols, rows, cell_size, font_neighbor,
+	grid = Grid(cols, rows, cell_size, neighbor_count_color,
              starter_cells_blueprint, random_starter_cells, artist, screen)
 
 	grid.offset_fullscreen = (
@@ -83,7 +85,7 @@ def setup():
 	grid.create_update_list()
 	grid.create_neighbor_count_list()
 
-	fill_screen(screen, grid.offset, size)
+	artist.fill_screen()
 
 	if draw_cells_bool:
 		grid.draw_cells()
@@ -97,19 +99,19 @@ def setup():
 	graph.offset = graph.offset_fullscreen if fullscreen_bool else 0
 
 	return (screen, grid, update_interval, draw_debug_info_bool, draw_neighbor_count_list_bool,
-         size, font_debug, draw_cells_bool, draw_updated_cells_bool, display_w, display_h, graph)
+         size, draw_cells_bool, draw_updated_cells_bool, display_w, display_h, graph, artist)
 
 
 def main():
 	first_start_time = time.time()
 
 	(screen, grid, update_interval, draw_debug_info_bool,
-	 draw_neighbor_count_list_bool, size, font_debug,
-	 draw_cells_bool, draw_updated_cells_bool, display_w, display_h, graph) = setup()
+	 draw_neighbor_count_list_bool, size, draw_cells_bool,
+	 draw_updated_cells_bool, display_w, display_h, graph, artist) = setup()
 
 	draw_debug(draw_debug_info_bool, draw_neighbor_count_list_bool,
-            first_start_time, update_interval, size, grid, font_debug,
-            draw_cells_bool, draw_updated_cells_bool, display_w, display_h, graph, screen)
+            first_start_time, update_interval, size, grid, draw_cells_bool,
+            draw_updated_cells_bool, display_w, display_h, graph, artist, screen)
 
 	pygame.display.flip()  # draw this frame
 
@@ -123,13 +125,13 @@ def main():
 			draw_updated_cells_bool, draw_neighbor_count_list_bool, state
 		) = get_inputs(
 			screen, size, display_w, display_h, grid, running_bool, draw_debug_info_bool,
-			draw_cells_bool, draw_updated_cells_bool, draw_neighbor_count_list_bool, state, graph
+			draw_cells_bool, draw_updated_cells_bool, draw_neighbor_count_list_bool, state, graph, artist
 		)
 
 		if state == "simulating":
 			start_time = time.time()
 
-			fill_screen(screen, grid.offset, size)
+			artist.fill_screen()
 
 			grid.create_update_list()
 
@@ -144,7 +146,7 @@ def main():
 				grid.draw_updated_cells()
 
 			draw_debug(draw_debug_info_bool, draw_neighbor_count_list_bool, start_time, update_interval,
-                            size, grid, font_debug, draw_cells_bool, draw_updated_cells_bool, display_w, display_h, graph, screen)
+                            size, grid, draw_cells_bool, draw_updated_cells_bool, display_w, display_h, graph, artist, screen)
 
 			pygame.display.flip()  # draw this frame
 
@@ -154,18 +156,8 @@ def main():
 			pygame.display.flip()  # draw this frame
 
 
-def fill_screen(screen, offset, size):
-	screen.fill((25, 25, 25))  # make the entire screen dark gray
-	# draw a rectangle to fill the area of the grid
-	pygame.draw.rect(
-		screen, (50, 50, 50),  # gray
-		(offset[0], offset[1], size[0], size[1]),  # x, y, width, height
-		0  # thickness, 0 means fill instead
-	)
-
-
 def draw_debug(draw_debug_info_bool, draw_neighbor_count_list_bool, start_time, update_interval,
-               size, grid, font_debug, draw_cells_bool, draw_updated_cells_bool, display_w, display_h, graph, screen):
+               size, grid, draw_cells_bool, draw_updated_cells_bool, display_w, display_h, graph, artist, screen):
 	# drawing stats that can help when debugging
 	if draw_neighbor_count_list_bool:
 		grid.draw_neighbor_count_list()
@@ -251,9 +243,12 @@ def draw_debug(draw_debug_info_bool, draw_neighbor_count_list_bool, start_time, 
 		text.append("display resolution: " +
                     str(display_w) + "x" + str(display_h))
 
-		for i, val in enumerate(text):
-			pos = (2 * grid.cell_size, 2 * grid.cell_size + 4 * grid.cell_size * i)
-			font_debug.render_to(screen, pos, val, (150, 150, 255))
+		for i, text in enumerate(text):
+			x = 2 * grid.cell_size
+			y = 2 * grid.cell_size + 4 * grid.cell_size * i
+			color = (150, 150, 255)
+			font = 'debug'
+			artist.text(x, y, text, color, font)
 
 		graph.data.append(data)
 
@@ -265,7 +260,7 @@ def sleep(update_interval, start_time):
 
 
 def get_inputs(screen, size, display_w, display_h, grid, running_bool, draw_debug_info_bool,
-               draw_cells_bool, draw_updated_cells_bool, draw_neighbor_count_list_bool, state, graph):
+               draw_cells_bool, draw_updated_cells_bool, draw_neighbor_count_list_bool, state, graph, artist):
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			running_bool = False  # sets running_bool to False to exit the while loop
@@ -280,11 +275,13 @@ def get_inputs(screen, size, display_w, display_h, grid, running_bool, draw_debu
 			# toggle fullscreen_bool
 			if keys[pygame.K_f]:
 				if screen.get_flags() & pygame.FULLSCREEN:
+					artist.offset = (0, 0)
 					grid.offset = (0, 0)
 					graph.offset = (0, 0)
 
 					pygame.display.set_mode(size)
 				else:
+					artist.offset = artist.offset_fullscreen
 					grid.offset = grid.offset_fullscreen
 					graph.offset = graph.offset_fullscreen
 

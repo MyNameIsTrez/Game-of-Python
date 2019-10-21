@@ -50,11 +50,11 @@ import pygame
 
 class Grid:
 
-	def __init__(self, cols, rows, cell_size, font_neighbor,
+	def __init__(self, cols, rows, cell_size, neighbor_count_color,
               starter_cells_blueprint, random_starter_cells, artist, screen):
 		self.size = (cols, rows)
 		self.cell_size = cell_size
-		self.font_neighbor = font_neighbor
+		self.neighbor_count_color = neighbor_count_color
 		self.starter_cells_blueprint = starter_cells_blueprint
 		self.random_starter_cells = random_starter_cells
 		self.artist = artist
@@ -220,19 +220,21 @@ class Grid:
 
 	def draw_neighbor_count_list(self):
 		for cell in self.neighbor_count_list:
+			x = self.offset[0] + cell[0] * self.cell_size + 0.5 * self.cell_size
+			y = self.offset[1] + cell[1] * self.cell_size + 0.5 * self.cell_size
 			neighbors = cell[2]
+			text = str(neighbors)
+			color = self.neighbor_count_color
 
-			coords = (self.offset[0] + cell[0] * self.cell_size + 0.5 * self.cell_size,
-                            self.offset[1] + cell[1] * self.cell_size + 0.5 * self.cell_size)
-			self.font_neighbor.render_to(
-				self.screen, coords, str(neighbors), (255, 50, 50))
+			self.artist.text(x, y, text, color, "neighbor")
 
 	def draw_updated_cells(self):
 		for cell in self.update_list:
-			pygame.draw.rect(
-				self.screen, (255, 0, 0),  # red
-				(self.offset[0] + cell[0] * self.cell_size,  # x
-				 self.offset[1] + cell[1] * self.cell_size,  # y
-				 self.cell_size, self.cell_size),  # width, height
-				0  # thickness, 0 means fill instead
-			)
+			color = (255, 0, 0)
+			x = self.offset[0] + cell[0] * self.cell_size
+			y = self.offset[1] + cell[1] * self.cell_size
+			width = self.cell_size
+			height = self.cell_size
+			thickness = 0
+
+			self.artist.rect(color, x, y, width, height, thickness)
