@@ -35,14 +35,14 @@ from grid import Grid
 def setup():
 	"""placeholder"""
 	# CUSTOM VALUES
-	cols = 100
-	rows = 100
-	cell_size = 5
+	cols = 50
+	rows = 50
+	cell_size = 15
 
-	update_interval = 0.1
+	update_interval = 0
 	starter_cells_blueprint = 1  # 1 = r_pentomino, 2 = glider
-	random_starter_cells = False  # WARNING: VERY LAGGY
-	fullscreen_bool = False
+	random_starter_cells = True  # WARNING: VERY LAGGY
+	fullscreen_bool = True
 	draw_debug_info_bool = True
 	draw_cells_bool = True
 	draw_updated_cells_bool = False
@@ -176,6 +176,16 @@ def draw_debug(draw_debug_info_bool, draw_neighbor_count_list_bool, start_time, 
 		string += " ms/frame"
 		text.append(string)
 
+		# ms/cell alive
+		string = str(round(ms / len(grid.cells_list), 2))
+		string += " ms/cell alive"
+		text.append(string)
+
+		# ms/cell updated
+		string = str(round(ms / len(grid.update_list), 2))
+		string += " ms/cell updated"
+		text.append(string)
+
 		# potential_speed_multiplier
 		if partial_time_elapsed > 0:
 			potential_speed_multiplier = round(
@@ -197,7 +207,6 @@ def draw_debug(draw_debug_info_bool, draw_neighbor_count_list_bool, start_time, 
                     str(grid.total_cell_count - len(grid.cells_list)))
 		text.append("cells alive: " + str(len(grid.cells_list)))
 		text.append("cells updated: " + str(len(grid.update_list)))
-		text.append("cell neighbors: " + str(len(grid.neighbor_count_list)))
 
 		text.append("draw cells: " + str(draw_cells_bool))
 		text.append("draw updated cells: " + str(draw_updated_cells_bool))
