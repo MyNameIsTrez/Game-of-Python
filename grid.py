@@ -51,26 +51,25 @@ import pygame
 class Grid:
 
 	def __init__(self, cols, rows, cell_size, font_neighbor,
-              starter_cells_blueprint, random_starter_cells, screen):
+              starter_cells_blueprint, random_starter_cells, artist, screen):
 		self.size = (cols, rows)
 		self.cell_size = cell_size
 		self.font_neighbor = font_neighbor
+		self.starter_cells_blueprint = starter_cells_blueprint
+		self.random_starter_cells = random_starter_cells
+		self.artist = artist
 		self.screen = screen
+
 		# makes a 1D array for storing the cols and rows of cells that are alive
 		self.cells_list = []
 		self.neighbor_count_list = None
 		self.update_list = None
-		self.starter_cells_blueprint = starter_cells_blueprint
-		self.offset_x = 0
-		self.offset_y = 0
 		self.total_cell_count = cols * rows
-		self.random_starter_cells = random_starter_cells
 		# self.pool = Pool()
 
 	def set_starter_cells_list(self):
 		# adds some cells to cells_list, according to the r_pentomino/glider blueprints
-		o_x = math.floor(self.size[0] / 2)  # offset_x
-		o_y = math.floor(self.size[1] / 2)  # offset_y
+		offset = (math.floor(self.size[0] / 2), math.floor(self.size[1] / 2))
 
 		if self.random_starter_cells:
 			for col in range(self.size[0]):
@@ -80,19 +79,19 @@ class Grid:
 		else:
 			if self.starter_cells_blueprint == 1:
 				# r_pentomino
-				self.cells_list.append((0 + o_x, 1 + o_y))
-				self.cells_list.append((1 + o_x, 0 + o_y))
-				self.cells_list.append((1 + o_x, 1 + o_y))
-				self.cells_list.append((1 + o_x, 2 + o_y))
-				self.cells_list.append((2 + o_x, 0 + o_y))
+				self.cells_list.append((0 + offset[0], 1 + offset[1]))
+				self.cells_list.append((1 + offset[0], 0 + offset[1]))
+				self.cells_list.append((1 + offset[0], 1 + offset[1]))
+				self.cells_list.append((1 + offset[0], 2 + offset[1]))
+				self.cells_list.append((2 + offset[0], 0 + offset[1]))
 			else:
 				# glider
 				# useful for checking if the cell states are being set incorrectly
-				self.cells_list.append((0 + o_x, 1 + o_y))
-				self.cells_list.append((1 + o_x, 2 + o_y))
-				self.cells_list.append((2 + o_x, 2 + o_y))
-				self.cells_list.append((2 + o_x, 1 + o_y))
-				self.cells_list.append((2 + o_x, 0 + o_y))
+				self.cells_list.append((0 + offset[0], 1 + offset[1]))
+				self.cells_list.append((1 + offset[0], 2 + offset[1]))
+				self.cells_list.append((2 + offset[0], 2 + offset[1]))
+				self.cells_list.append((2 + offset[0], 1 + offset[1]))
+				self.cells_list.append((2 + offset[0], 0 + offset[1]))
 
 	def create_update_list(self):
 		self.update_list = []
@@ -210,20 +209,21 @@ class Grid:
 
 	def draw_cells(self):
 		for cell in self.cells_list:
-			pygame.draw.rect(
-				self.screen, (255, 255, 255),  # white
-				(self.offset_x + cell[0] * self.cell_size,  # x
-				 self.offset_y + cell[1] * self.cell_size,  # y
-				 self.cell_size, self.cell_size),  # width, height
-				0  # thickness, 0 means fill instead
-			)
+			color = (255, 255, 255)
+			x = self.offset[0] + cell[0] * self.cell_size
+			y = self.offset[1] + cell[1] * self.cell_size
+			width = self.cell_size
+			height = self.cell_size
+			thickness = 0
+
+			self.artist.rect(color, x, y, width, height, thickness)
 
 	def draw_neighbor_count_list(self):
 		for cell in self.neighbor_count_list:
 			neighbors = cell[2]
 
-			coords = (self.offset_x + cell[0] * self.cell_size + 0.5 * self.cell_size,
-                            self.offset_y + cell[1] * self.cell_size + 0.5 * self.cell_size)
+			coords = (self.offset[0] + cell[0] * self.cell_size + 0.5 * self.cell_size,
+                            self.offset[1] + cell[1] * self.cell_size + 0.5 * self.cell_size)
 			self.font_neighbor.render_to(
 				self.screen, coords, str(neighbors), (255, 50, 50))
 
@@ -231,8 +231,8 @@ class Grid:
 		for cell in self.update_list:
 			pygame.draw.rect(
 				self.screen, (255, 0, 0),  # red
-				(self.offset_x + cell[0] * self.cell_size,  # x
-				 self.offset_y + cell[1] * self.cell_size,  # y
+				(self.offset[0] + cell[0] * self.cell_size,  # x
+				 self.offset[1] + cell[1] * self.cell_size,  # y
 				 self.cell_size, self.cell_size),  # width, height
 				0  # thickness, 0 means fill instead
 			)
