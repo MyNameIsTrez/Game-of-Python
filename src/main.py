@@ -30,6 +30,7 @@ import pygame.freetype
 import pygame
 
 from configparser import ConfigParser
+from ast import literal_eval
 
 from grid import Grid
 from graph import Graph
@@ -43,9 +44,7 @@ from event_handler import Event_Handler
 def setup():
 	# get the user's config settings from config.ini
 	config = ConfigParser()
-	# config.read("config.ini")
-	config.read(os.path.join(sys.path[0], "config.ini"))
-	# print(config["CUSTOM VARIABLES"]["rows"])
+	config.read(os.path.join(sys.path[0][0:-4], "config.ini"))
 	cfg = config["CUSTOM VARIABLES"]
 
 	cols = int(cfg["cols"])
@@ -59,11 +58,10 @@ def setup():
 	draw_debug_info_bool = cfg.getboolean("draw_debug_info_bool")
 	draw_cells_bool = cfg.getboolean("draw_cells_bool")
 	draw_updated_cells_bool = cfg.getboolean("draw_updated_cells_bool")
-	draw_neighbor_count_list_bool = cfg.getboolean(
-		"draw_neighbor_count_list_bool")
+	draw_neighbor_count_list_bool = cfg.getboolean("draw_neighbor_count_list_bool")
 	font_type = cfg["font_type"]
-	neighbor_count_color = eval(cfg["neighbor_count_color"])
-
+	neighbor_count_color = literal_eval(cfg["neighbor_count_color"])
+	
 	# initialization
 	pygame.init()
 
