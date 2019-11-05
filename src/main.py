@@ -44,7 +44,10 @@ from event_handler import Event_Handler
 def setup():
 	# get the user's config settings from config.ini
 	config = ConfigParser()
-	config.read(os.path.join(sys.path[0][0:-4], "config.ini"))
+    
+	path = os.path.join(sys.path[0][0:-4], "config.ini")
+	config.read(path)
+
 	cfg = config["CUSTOM VARIABLES"]
 
 	cols = int(cfg["cols"])
