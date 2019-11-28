@@ -1,0 +1,18 @@
+{
+    "Lua.diagnostics.globals": [
+        "write",
+        "term",
+        "sleep",
+        "textutils",
+        "fs",
+        "peripheral",
+        "rednet",
+        "colors",
+        "shell",
+        "parallel",
+        "rs"
+    ],
+    "Lua.diagnostics.disable": [
+        "lowercase-global"
+    ]
+}
