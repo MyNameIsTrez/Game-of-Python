@@ -10,7 +10,8 @@
         "colors",
         "shell",
         "parallel",
-        "rs"
+        "rs",
+        "read"
     ],
     "Lua.diagnostics.disable": [
         "lowercase-global"
